@@ -1,0 +1,26 @@
+name: Deploy WAR file to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up SSH
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    # Upload the WAR file
+    - name: Deploy WAR file to Ubuntu server
+      run: |
+        scp -o StrictHostKeyChecking=no ./ResidentManagement/dist/ResidentManagement.war ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/apache-tomcat-10.1.34/webapps
