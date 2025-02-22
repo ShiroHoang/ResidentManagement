@@ -23,8 +23,7 @@ jobs:
     # Upload the WAR file
     - name: Deploy src code to Ubuntu server
       run: |
-        scp -o 
-         StrictHostKeyChecking=no -r ./ResidentManagement/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/
+        scp -o StrictHostKeyChecking=no -r ./ResidentManagement/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/
 
     # Build the WAR file
     - name: Build WAR on Ubuntu server
