@@ -20,11 +20,16 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    # Upload the WAR file
+     # Upload src code
     - name: Deploy src code to Ubuntu server
       run: |
-        scp -o StrictHostKeyChecking=no -r ./ResidentManagement/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ResidentManagement/src/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/ResidentManagement/src/
 
+    # Upload the web file
+    - name: Deploy web element to Ubuntu server
+      run: |
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ResidentManagement/web/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/ResidentManagement/web/
+        
     # Build the WAR file
     - name: Build WAR on Ubuntu server
       run: |
