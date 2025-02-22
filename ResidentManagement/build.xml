@@ -7,9 +7,9 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="ResidentManagement" default="default" basedir=".">
+<project name="ResidentManagement" default="war" basedir=".">
     <description>Builds, tests, and runs the project ResidentManagement.</description>
-    <import file="nbproject/build-impl.xml"/>
+    <import file="nbproject/build-impl.xml" />
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -68,4 +68,34 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <property name="src.dir" value="src" />
+    <property name="build.dir" value="build" />
+    <property name="web.dir" value="web" />
+    <property name="war.dir" value="dist" />
+    <property name="war.name" value="ResidentManagement.war" />
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${war.dir}" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}/WEB-INF/classes" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}/WEB-INF/classes" />
+    </target>
+
+    <target name="war" depends="clean,compile">
+        <mkdir dir="${war.dir}" />
+        <mkdir dir="${build.dir}/WEB-INF/lib" />
+
+        <!-- Copy WebContent to build directory -->
+        <copy todir="${build.dir}">
+            <fileset dir="${web.dir}" />
+        </copy>
+
+        <!-- Package WAR file -->
+        <war destfile="${war.dir}/${war.name}" webxml="${build.dir}/WEB-INF/web.xml">
+            <fileset dir="${build.dir}" />
+        </war>
+    </target>
 </project>
