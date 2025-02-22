@@ -24,3 +24,18 @@ jobs:
     - name: Deploy src code to Ubuntu server
       run: |
         scp -o StrictHostKeyChecking=no -r ./ResidentManagement/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ubuntu/projects/
+
+    # Build the WAR file
+    - name: Build WAR on Ubuntu server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        cd /home/ubuntu/projects/ResidentManagement/
+        ant war
+        EOF
+
+    - name: Deploy WAR to Tomcat
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        cp /home/ubuntu/project/ResidentManagement/dist/ResidentManagement.war /home/ubuntu/tomcat/webapps/
+        EOF
+        
