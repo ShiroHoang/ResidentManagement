@@ -70,32 +70,39 @@
     -->
     <property name="src.dir" value="src" />
     <property name="build.dir" value="build" />
+    <property name="classes.dir" value="${build.dir}/classes" />
     <property name="web.dir" value="web" />
-    <property name="war.dir" value="dist" />
-    <property name="war.name" value="ResidentManagement.war" />
+    <property name="lib.dir" value="${build.dir}/web/WEB-INF/lib" />
+    <property name="dist.dir" value="dist" />
+    <property name="war.file" value="${dist.dir}/${ant.project.name}.war" />
 
     <target name="clean">
-        <delete dir="${build.dir}" />
-        <delete dir="${war.dir}" />
+        <delete dir="${classes.dir}" /> <!-- Remove compiled classes -->
+        <delete dir="${dist.dir}"/> 
     </target>
 
-    <target name="compile">
-        <mkdir dir="${build.dir}/WEB-INF/classes" />
-        <javac srcdir="${src.dir}" destdir="${build.dir}/WEB-INF/classes" />
+    <target name="init">
+        <mkdir dir="${dist.dir}" /> <!-- Create dist directory -->
     </target>
 
-    <target name="war" depends="clean,compile">
-        <mkdir dir="${war.dir}" />
-        <mkdir dir="${build.dir}/WEB-INF/lib" />
+    <target name="compile" depends="clean,init">
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="*.jar" /> <!-- Your libraries -->
+            </classpath>
+        </javac>
+    </target>
 
-        <!-- Copy WebContent to build directory -->
-        <copy todir="${build.dir}">
-            <fileset dir="${web.dir}" />
-        </copy>
-
-        <!-- Package WAR file -->
-        <war destfile="${war.dir}/${war.name}" webxml="${build.dir}/WEB-INF/web.xml">
-            <fileset dir="${build.dir}" />
+    <target name="build-war" depends="compile">
+        <war destfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
+            <classes dir="${classes.dir}" /> <!-- Compiled classes -->
+            <lib dir="${lib.dir}" /> <!-- Your libraries (already in build dir) -->
+            <fileset dir="${web.dir}"> <!-- Web content (JSP, HTML, etc.) -->
+                <include name="**/*.*" />
+                <exclude name="WEB-INF/web.xml" />
+            </fileset>
         </war>
+        <echo message="WAR file created at ${war.file}" />
     </target>
 </project>
