@@ -4,13 +4,37 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateAccountServlet</servlet-name>
+        <servlet-class>controller.UpdateAccountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>controller.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateAddressServlet</servlet-name>
+        <servlet-class>controller.UpdateAddressServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateAccountServlet</servlet-name>
+        <url-pattern>/updateAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateAddressServlet</servlet-name>
+        <url-pattern>/updateAddress</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>
-            login.jsp
+            home.html
         </welcome-file>
     </welcome-file-list>
 </web-app>

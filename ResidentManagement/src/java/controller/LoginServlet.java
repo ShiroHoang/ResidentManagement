@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -57,7 +58,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.sendRedirect("login.jsp");
     }
 
     /**
@@ -71,16 +72,18 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         UserDAO udb = new UserDAO();
         User user = udb.getAccount(email, password);
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("Hello" + user);
+        if(user == null){
+            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
-
+        session.setAttribute("account",user);
+        request.getRequestDispatcher("citizenMain.jsp").forward(request, response);
     }
 
     /**
