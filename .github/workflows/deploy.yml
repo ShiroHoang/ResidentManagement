@@ -36,6 +36,6 @@ jobs:
     - name: Deploy WAR to Tomcat
       run: |
         ssh -o StrictHostKeyChecking=no -T ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-        cp /home/ubuntu/projects/ResidentManagement/dist/ResidentManagement.war /home/ubuntu/tomcat/webapps/
+        cp /home/ubuntu/projects/ResidentManagement/dist/ResidentManagement.war /home/ubuntu/apache-tomcat-10.1.34/webapps/
         EOF
         
