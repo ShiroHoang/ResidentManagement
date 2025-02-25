@@ -7,8 +7,6 @@ package dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import model.*;
 
@@ -17,20 +15,19 @@ import model.*;
  * @author huyng
  */
 public class AddressRegistryDAO extends DBContext {
-
-    public List<AddressRegistry> getAll() {
-        String sql = "select * from AddressRegistry";
+        public User getAccount(String user, String pass) {
+        String sql = "select * from Users where "
+                + "Email =? and Password = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, user);
+            stmt.setString(2, pass);
             ResultSet rs = stmt.executeQuery();
-            List<AddressRegistry> list = new ArrayList<>();
             while (rs.next()) {
-                list.add(new AddressRegistry(rs.getInt("AddressID"), rs.getString("Province"),
-                        rs.getString("City"), rs.getString("District"), rs.getString("Ward"), 
-                        rs.getString("Street"), rs.getString("HouseNumber")));
-                ;
+                return new User(rs.getInt("UserId"), rs.getString("FullName"),
+                        rs.getString("Email"), rs.getString("Password"), rs.getString("Role"), rs.getString("Address"), rs.getString("PhoneNumber")
+                );
             }
-            return list;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }

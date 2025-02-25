@@ -5,26 +5,18 @@
 
 package controller;
 
-import dal.AddressRegistryDAO;
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.AddressRegistry;
 
 /**
  *
  * @author huyng
  */
-public class AddressServlet extends HttpServlet {
+public class UpdateAddressServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -41,10 +33,10 @@ public class AddressServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddressServlet</title>");  
+            out.println("<title>Servlet UpdateAddressServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddressServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet UpdateAddressServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,26 +53,7 @@ public class AddressServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-                response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-        AddressRegistryDAO ardb = new AddressRegistryDAO();
-        List<AddressRegistry> list = new ArrayList<>();
-        list = ardb.getAll();
-        for (AddressRegistry addressRegistry : list) {
-            JsonObject jsonObject = (JsonObject) Json.createObjectBuilder()
-                    .add("province", addressRegistry.getProvince())
-                    .add("city", addressRegistry.getCity())
-                    .add("district", addressRegistry.getDistrict())
-                    .add("ward", addressRegistry.getWard())
-                    .add("street", addressRegistry.getStreet()).build();
-
-            jsonArrayBuilder.add(jsonObject);
-        }
-        try (JsonWriter jsonWriter = Json.createWriter(out)) {
-            jsonWriter.writeArray(jsonArrayBuilder.build());
-        }
-        out.flush();
+        processRequest(request, response);
     } 
 
     /** 
@@ -93,8 +66,7 @@ public class AddressServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String action = request.getParameter("action");
-        
+        processRequest(request, response);
     }
 
     /** 

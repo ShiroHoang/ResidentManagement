@@ -153,82 +153,33 @@
 
         <div class="hero">
             <div class="form-container">
-                <form class="formSubmit" action="" method="">
+                <form class="formSubmit" action="ResetPass" method="post">
                     <c:set var="account" value=""${sessionScope.account}/> </c:set
                     <table>
-                        <tr>
-                            <td>Loại đơn</td>
-                            <td>
-                                <select class="registerAddressType" name="requestType" id="requestType" onchange="toggleFields()">
-                                    <option value="registerAddress">Đơn đề nghị đăng ký hộ khẩu</option>
-                                    <option value="separateAddress">Đơn đề nghị tách hộ khẩu</option>
-                                    <option value="moveAddress">Đơn đề nghị chuyển hộ khẩu</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr class="typeStay hidden">
-                            <td>Loại đăng ký hộ khẩu</td>
-                            <td>
-                                <select name="stay" id="">
-                                    <option value="permanent">Thường trú</option>
-                                    <option value="temporary">Tạm trú</option>
-                                    <option value="temporary-stay">Lưu trú</option>
-                                </select>
-                            </td>                                
-                        </tr>
+                        <h1 class="opacity">Đổi mật khẩu</h1>
                         <tr class="name">
                             <td>Họ và tên</td>
-                            <td><input type="text" name="name" readonly value="${account.fullName}"></td>
+                            <td><input type="text" name="name" placeholder="Nguyen Van A"></td>
                         </tr>
                         <tr class="email">
                             <td>Email</td>
-                            <td><input name="email" readonly value="${account.email}"></td>
+                            <td><input type="text" name="email"  placeholder="a@gmail.com"></td>
                         </tr>
                         <tr class="phone">
                             <td>Số điện thoại</td>
-                            <td><input name="phone" readonly value="${account.phoneNumber}" ></td>
+                            <td><input name="phone" placeholder="09123455678"></td>
                         </tr>
                         <tr class="hidden old_address">
-                            <td>Địa chỉ cũ</td>
-                            <td><input type="text" name="oldAddress"></td>
+                            <td>Mật khẩu mới:</td>
+                            <td><input type="text" name="newPass"></td>
                         </tr>
                         <tr class="hidden new_address">
-                            <td>Địa chỉ mới</td>
-                            <td><input type="text" name="newAddress"></td>
-                        </tr>
-                        <tr>
-                            <td>Hộ khẩu đăng ký</td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-4 mb-2">
-                                        <select id="province" name="province" class="form-select">
-                                            <option value="">Tỉnh</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <select id="city" name="city" class="form-select">
-                                            <option value="">Thành phố</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <select id="district" name="district" class="form-select">
-                                            <option value="">Quận</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <select id="ward" name="ward" class="form-select">
-                                            <option value="">Phường</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select id="street" name="street" class="form-select">
-                                            <option value="">Đường</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                            <td>Xác nhận lại mật khẩu: </td>
+                            <td><input type="text" name="confirmPass"></td>
+                        </tr>                        
                     </table>
+                    <h3 style="color:red">${requestScope.error}</h3>
+                    <h3 style="color:green">${requestScope.success}</h3>
                     <div class="text-center fs-4" width="100px">
                         <input class="btn fs-4" type="submit" value="Gửi đơn">
                     </div>  
@@ -243,34 +194,34 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                    function toggleFields() {
-                                        let requestType = document.getElementById("requestType").value;
-                                        let old_address = document.querySelector(".old_address");
-                                        let new_address = document.querySelector(".new_address");
-                                        let typeStay = document.querySelector(".typeStay");
+            function toggleFields() {
+                let requestType = document.getElementById("requestType").value;
+                let old_address = document.querySelector(".old_address");
+                let new_address = document.querySelector(".new_address");
+                let typeStay = document.querySelector(".typeStay");
 
-                                        // Hide all initially
-                                        old_address.classList.add("hidden");
-                                        new_address.classList.add("hidden");
-                                        typeStay.classList.add("hidden");
+                // Hide all initially
+                old_address.classList.add("hidden");
+                new_address.classList.add("hidden");
+                typeStay.classList.add("hidden");
 
-                                        if (requestType === "registerAddress") {
-                                            typeStay.classList.remove("hidden");
-                                        } else if (requestType === "moveAddress") {
-                                            old_address.classList.remove("hidden");
-                                            new_address.classList.remove("hidden");
-                                        }
+                if (requestType === "registerAddress") {
+                    typeStay.classList.remove("hidden");
+                } else if (requestType === "moveAddress") {
+                    old_address.classList.remove("hidden");
+                    new_address.classList.remove("hidden");
+                }
 
-                                        console.log("Request Type:", requestType);
-                                        console.log("Old Address:", old_address);
-                                        console.log("New Address:", new_address);
-                                        console.log("Type Stay:", typeStay);
-                                    }
+                console.log("Request Type:", requestType);
+                console.log("Old Address:", old_address);
+                console.log("New Address:", new_address);
+                console.log("Type Stay:", typeStay);
+            }
 
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        toggleFields(); // Ensure the function runs when the page loads
-                                        document.getElementById("requestType").addEventListener("change", toggleFields);
-                                    });
+            document.addEventListener("DOMContentLoaded", function () {
+                toggleFields(); // Ensure the function runs when the page loads
+                document.getElementById("requestType").addEventListener("change", toggleFields);
+            });
         </script>
     </body>
 </html>
