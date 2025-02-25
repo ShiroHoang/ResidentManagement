@@ -40,7 +40,7 @@
                     <h3 style="color:red">${requestScope.error}</h3>
                     <div class="register-forget opacity">
                         <a href="">ĐĂNG KÝ</a>
-                        <a href="">QUÊN MẬT KHẨU</a>
+                        <a href="resetPassword.jsp">QUÊN MẬT KHẨU</a>
                     </div>
                 </div>
                 <div class="circle circle-two"></div>

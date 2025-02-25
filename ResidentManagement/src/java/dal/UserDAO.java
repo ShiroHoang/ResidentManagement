@@ -67,5 +67,36 @@ public class UserDAO extends DBContext {
         }
         return null;
     }
+    
+    public User getUserByNamePhoneAndEmail(String fullName, String email, String phoneNum) {
+        String sql = "select * from Users where  FullName = ? and Email = ? and PhoneNumber = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, fullName);
+            stmt.setString(2, email);
+            stmt.setString(3, phoneNum);
+            ResultSet rs;
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                return new User(rs.getInt("UserId"),rs.getString("FullName"), rs.getString("Email"),
+                        rs.getString("Password"), rs.getString("Role"), rs.getString("Address"), rs.getString("PhoneNumber"));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+        return null;
+    }
+    
+    public void updateAccountPassword(int userId, String password) {
+        String sql = "update Users set Password = ? where UserID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, password);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+    }
 
 }
