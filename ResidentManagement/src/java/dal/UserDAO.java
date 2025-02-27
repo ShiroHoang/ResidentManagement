@@ -99,4 +99,40 @@ public class UserDAO extends DBContext {
         }
     }
 
+    
+    public boolean checkIfExistedEmail(String email) {
+        String sql = "select * from Users where Email = ?";
+        User user = null;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);          
+            stmt.setString(1, email);
+            ResultSet rs;
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                user = new User(rs.getInt("UserId"),rs.getString("FullName"), rs.getString("Email"),
+                        rs.getString("Password"), rs.getString("Role"), rs.getString("Address"), rs.getString("PhoneNumber"));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+        
+        return user != null;
+    }
+    
+    public void insertAccount(String name, String email, String password, String role, String phoneNum, String address) {
+        String sql = "insert into Users(Email, Password, Role, PhoneNumber, Address, FullName) values(?, ?, ?, ?, ?, ?)";
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            stmt.setString(3,  role);
+            stmt.setString(4, phoneNum);
+            stmt.setString(5, address);
+            stmt.setString(6, name);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+    }
 }
