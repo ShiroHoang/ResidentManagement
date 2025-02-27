@@ -81,19 +81,19 @@ public class RegisterAccountServlet extends HttpServlet {
         
         if ( userdb.checkIfExistedEmail(email) || user != null) {
             request.setAttribute("error", "Thông tin tài khoản đã tồn tại hoặc email đã được đăng kí!");
-            request.getRequestDispatcher("registerAccount.jsp").forward(request, response);
+            request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
             return;
         }
         
         if (!newPass.equals(confirmPass)) {
             request.setAttribute("error", "Mật khẩu không khớp!");
-            request.getRequestDispatcher("registerAccount.jsp").forward(request, response);
+            request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
             return;
         }        
         
         userdb.insertAccount(fullName, email, newPass, role, phoneNum, address);
         request.setAttribute("success", "Đăng kí tài khoản thành công!");
-        request.getRequestDispatcher("registerAccount.jsp").forward(request, response);
+        request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
     }
 
     /** 
