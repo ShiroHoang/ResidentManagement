@@ -37,11 +37,9 @@ public class DBContext {
                 throw new IOException("db.properties file not found in classpath");
             }
             props.load(input);
-            String user = props.getProperty("db.user");
-            System.out.println(user);
-            String pass = props.getProperty("db.password");
-            System.out.println(pass);
-            String url = props.getProperty("db.url");
+            String user = "sa";
+            String pass = "sa123@@@";
+            String url = "jdbc:sqlserver://47.129.203.47:1433;databaseName=ResidentManagement";
             System.out.println(url);
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
