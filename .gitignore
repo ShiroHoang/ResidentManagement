@@ -2,4 +2,6 @@
 /ResidentManagement/dist
 /ResidentManagement/build.xml
 /ResidentManagement/build
+/ResidentManagement/src/java/db.properties
+ResidentManagement/build
 test.txt
