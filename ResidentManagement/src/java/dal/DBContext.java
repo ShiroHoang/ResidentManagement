@@ -29,14 +29,6 @@ public class DBContext {
         // For example : StudentDBContext extends DBContext , 
         //where StudentDBContext is located in dal package, 
         try {
-            Properties props = new Properties();
-
-            // Load db.properties from classpath
-            InputStream input = DBContext.class.getClassLoader().getResourceAsStream("db.properties");
-            if (input == null) {
-                throw new IOException("db.properties file not found in classpath");
-            }
-            props.load(input);
             String user = "sa";
             String pass = "sa123@@@";
             String url = "jdbc:sqlserver://47.129.203.47:1433;databaseName=ResidentManagement";
@@ -45,8 +37,6 @@ public class DBContext {
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 }
