@@ -16,7 +16,8 @@ import model.*;
  *
  * @author huyng
  */
-public class RegistrationDAO extends DBContext{
+public class RegistrationDAO extends DBContext {
+
     public List<Registration> getAll() {
         String sql = "select * from Registrations";
         try {
@@ -33,8 +34,18 @@ public class RegistrationDAO extends DBContext{
         }
         return null;
     }
-    
-    public void newRegistration(){
-        String sql = "insert into Registrations values(?,?)";
+
+    public void newRegistration(User user, String registrationType, String startDate, AddressRegistry addressRegistry) {
+        String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID) values(?,?,?,?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            stmt.setString(2, registrationType);
+            stmt.setString(3, startDate);
+            stmt.setInt(4, addressRegistry.getAddressId());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

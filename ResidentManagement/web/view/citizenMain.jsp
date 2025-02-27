@@ -82,7 +82,7 @@
                 <div class="collapse navbar-collapse px-5 col-lg-7" id="navbarNav">
                     <ul class="navbar-nav w-100 justify-content-around">
                         <li class="nav-item align-items-center">
-                            <a class="nav-link fs-5" href="citizenMain.jsp">Trang chủ</a>
+                            <a class="nav-link fs-5" href="nav?action=citizenMain">Trang chủ</a>
                         </li>
                         <li class="nav-item align-items-center">
                             <a class="nav-link fs-5" href="#">Thông báo</a>
@@ -93,7 +93,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="">Xem đơn đã gửi</a></li>
-                                <li><a class="dropdown-item" href="submitRequest.jsp">Gửi đơn mới</a></li>
+                                <li><a class="dropdown-item" href="nav?action=submitRequest">Gửi đơn mới</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown align-items-center">
@@ -102,7 +102,7 @@
                                 <span id="account">${sessionScope.account.fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="citizenAccount.jsp">Hồ sơ</a></li>
+                                <li><a class="dropdown-item" href="nav?action=citizenAccount">Hồ sơ</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="logout">Đăng xuất</a></li>
                             </ul>

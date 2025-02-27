@@ -9,6 +9,7 @@ package model;
  * @author huyng
  */
 public class AddressRegistry {
+
     private int addressId;
     private String province;
     private String city;
@@ -17,8 +18,20 @@ public class AddressRegistry {
     private String street;
     private String houseNumber;
 
+    public AddressRegistry() {
+    }
+
     public AddressRegistry(int addressId, String province, String city, String district, String ward, String street, String houseNumber) {
         this.addressId = addressId;
+        this.province = province;
+        this.city = city;
+        this.district = district;
+        this.ward = ward;
+        this.street = street;
+        this.houseNumber = houseNumber;
+    }
+
+    public AddressRegistry(String province, String city, String district, String ward, String street, String houseNumber) {
         this.province = province;
         this.city = city;
         this.district = district;
@@ -82,6 +95,5 @@ public class AddressRegistry {
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
     }
-    
-    
+
 }
