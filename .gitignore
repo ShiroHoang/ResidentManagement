@@ -5,7 +5,7 @@
 /ResidentManagement/src/java/db.properties
 ResidentManagement/build
 test.txt
-/ResidentManagement/build
+ResidentManagement/build/*
 ResidentManagement/nbproject/build-impl.xml
 ResidentManagement/nbproject/genfiles.properties
 ResidentManagement/nbproject/project.properties
