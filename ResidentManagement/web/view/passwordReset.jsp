@@ -10,7 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quên Mật Khẩu</title>
         <link rel="icon" href="images/star.png" type="image/x-icon"/>
-        <link rel="stylesheet" type="text/css" href="css/login.css">
+        <link rel="stylesheet" type="text/css" href="../css/login.css">
         <script src="js/themes.js"></script>
         <style>
             .hero {

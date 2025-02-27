@@ -26,7 +26,7 @@ public class AddressRegistryDAO extends DBContext {
             List<AddressRegistry> list = new ArrayList<>();
             while (rs.next()) {
                 list.add(new AddressRegistry(rs.getInt("AddressID"), rs.getString("Province"),
-                        rs.getString("City"), rs.getString("District"), rs.getString("Ward"), 
+                        rs.getString("City"), rs.getString("District"), rs.getString("Ward"),
                         rs.getString("Street"), rs.getString("HouseNumber")));
                 ;
             }
@@ -35,6 +35,50 @@ public class AddressRegistryDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
 
+    public boolean checkAddressRegistry(AddressRegistry addressRegistry) {
+        String sql = """
+                     select * from AddressRegistry where
+                     Province = ? and 
+                     City = ? and 
+                     District = ? and 
+                     Ward = ? and 
+                     Street = ? and
+                     HouseNumber = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, "N'" + addressRegistry.getProvince() + "'");
+            stmt.setString(2, "N'" + addressRegistry.getCity() + "'");
+            stmt.setString(3, "N'" + addressRegistry.getDistrict() + "'");
+            stmt.setString(4, "N'" + addressRegistry.getWard() + "'");
+            stmt.setString(5, "N'" + addressRegistry.getStreet() + "'");
+            stmt.setString(6, "N'" + addressRegistry.getHouseNumber() + "'");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return true;
+            }
+            return false;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    public void insertNewAddressRegistry(AddressRegistry addressRegistry) {
+        try {
+            String sql = "insert into AddressRegistry(Province, City, District, Ward, Street, HouseNumber) values(?,?,?,?,?,?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, addressRegistry.getProvince());
+            stmt.setString(2, addressRegistry.getCity());
+            stmt.setString(3, addressRegistry.getDistrict());
+            stmt.setString(4, addressRegistry.getWard());
+            stmt.setString(5, addressRegistry.getStreet());
+            stmt.setString(6, addressRegistry.getHouseNumber());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

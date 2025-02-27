@@ -153,7 +153,7 @@
 
         <div class="hero">
             <div class="form-container">
-                <form class="formSubmit" action="address" method="post">
+                <form class="formSubmit" action="registration" method="post">
                     <c:set var="account" value="${sessionScope.account}"/>
                     <input type="hidden" name="action" id="action" value="">
                     <table>
@@ -170,11 +170,12 @@
                         <tr class="typeStay hidden">
                             <td>Loại đăng ký hộ khẩu</td>
                             <td>
+<!--                                retrieve this-->
                                 <select name="stay" id="">
                                     <option value="permanent">Thường trú</option>
                                     <option value="temporary">Tạm trú</option>
                                     <option value="temporary-stay">Lưu trú</option>
-                                </select>
+                                </select> 
                             </td>                                
                         </tr>
                         <tr class="name">
@@ -219,7 +220,9 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <input type="text" name="house" placeholder="Nhà">
+                                        <select id="house" name="house" class="form-select">
+                                            <option value="">Số nhà</option>
+                                        </select>
                                     </div>
                                 </div>
                             </td>
@@ -227,6 +230,9 @@
                     </table>
                     <div class="text-center fs-4" width="100px">
                         <input class="btn fs-4" type="submit" value="Gửi đơn">
+                    </div>  
+                    <div class="text-center fs-4" width="100px">
+                        ${requestScope.message}
                     </div>  
                 </form>
             </div>
@@ -291,6 +297,7 @@
                 document.getElementById('city').addEventListener('change', filterDistricts);
                 document.getElementById('district').addEventListener('change', filterWards);
                 document.getElementById('ward').addEventListener('change', filterStreets);
+                document.getElementById('street').addEventListener('change', filterHouses);
             });
 
             let allAddresses = []; // Store all address data globally
@@ -425,6 +432,39 @@
                         option.value = street;
                         option.textContent = street;
                         streetSelect.appendChild(option);
+                    });
+                }
+            }
+
+            function filterHouses() {
+                const provinceSelect = document.getElementById('province');
+                const citySelect = document.getElementById('city');
+                const districtSelect = document.getElementById('district');
+                const wardSelect = document.getElementById('ward');
+                const streetSelect = document.getElementById('street');
+                const houseSelect = document.getElementById('house');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+                const selectedStreet = streetSelect.value;
+
+                // Clear previous options
+                houseSelect.innerHTML = '<option value="">Nhà</option>';
+
+                if (selectedStreet) {
+                    const houses = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict &&
+                                            addr.ward === selectedWard && addr.street === selectedStreet)
+                                .map(addr => addr.house))];
+
+                    houses.forEach(house => {
+                        const option = document.createElement('option');
+                        option.value = house;
+                        option.textContent = house;
+                        houseSelect.appendChild(option);
                     });
                 }
             }
