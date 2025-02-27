@@ -20,6 +20,12 @@
         <servlet-name>NavigationServlet</servlet-name>
         <servlet-class>controller.NavigationServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>RegisterAccountServlet</servlet-name>
+        <servlet-class>controller.RegisterAccountServlet</servlet-class>
+    </servlet>
+    
     <servlet>
         <servlet-name>RegistrationProcessServlet</servlet-name>
         <servlet-class>controller.RegistrationProcessServlet</servlet-class>
@@ -44,6 +50,12 @@
         <servlet-name>NavigationServlet</servlet-name>
         <url-pattern>/nav</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>RegisterAccountServlet</servlet-name>
+        <url-pattern>/RegisterAccount</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>RegistrationProcessServlet</servlet-name>
         <url-pattern>/registration</url-pattern>

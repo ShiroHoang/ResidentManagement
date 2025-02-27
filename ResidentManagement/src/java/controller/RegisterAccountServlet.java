@@ -55,7 +55,7 @@ public class RegisterAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
     } 
 
     /** 
