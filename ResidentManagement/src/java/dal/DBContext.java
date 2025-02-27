@@ -38,8 +38,11 @@ public class DBContext {
             }
             props.load(input);
             String user = props.getProperty("db.user");
+            System.out.println(user);
             String pass = props.getProperty("db.password");
+            System.out.println(pass);
             String url = props.getProperty("db.url");
+            System.out.println(url);
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
