@@ -6,3 +6,7 @@
 ResidentManagement/build
 test.txt
 /ResidentManagement/build
+ResidentManagement/nbproject/build-impl.xml
+ResidentManagement/nbproject/genfiles.properties
+ResidentManagement/nbproject/project.properties
+ResidentManagement/nbproject/project.xml
