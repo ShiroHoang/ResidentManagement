@@ -11,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.User;
 
 /**
  *
@@ -53,13 +55,21 @@ public class NavigationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String action = request.getParameter("action");
+        User user = (User) session.getAttribute("account");
+        if(user == null){
+            response.sendRedirect("login");
+            return;
+        }
         if(action.equalsIgnoreCase("citizenMain")){
             request.getRequestDispatcher("view/citizenMain.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("submitRequest")){
             request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("citizenAccount")){
             request.getRequestDispatcher("view/citizenAccount.jsp").forward(request, response);
+        }else if(action.equalsIgnoreCase("viewRequest")){
+            request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
         }
     } 
 
