@@ -81,4 +81,36 @@ public class AddressRegistryDAO extends DBContext {
             System.out.println(e.getMessage());
         }
     }
+    
+    public int getAddressId(AddressRegistry addressRegistry){
+        try {
+            String sql = """
+                         select * from AddressRegistry where 
+                         Province = ?
+                         and City = ?
+                         and District = ?
+                         and Ward = ?
+                         and Street = ?
+                         and HouseNumber = ?
+                         """;
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1,addressRegistry.getProvince());
+            stmt.setString(2,addressRegistry.getCity());
+            stmt.setString(3, addressRegistry.getDistrict());
+            stmt.setString(4, addressRegistry.getWard());
+            stmt.setString(5, addressRegistry.getStreet());
+            stmt.setString(6, addressRegistry.getHouseNumber());
+            ResultSet rs = stmt.executeQuery();
+            AddressRegistry temp = new AddressRegistry();
+            while(rs.next()){
+                temp =  new AddressRegistry(rs.getInt("AddressID"), 
+                        rs.getString("Province"), rs.getString("City"), rs.getString("District"), rs.getString("Ward"), rs.getString("Street"),
+                        rs.getString("HouseNumber"));
+            }
+            return temp.getAddressId();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        }
+    }
 }

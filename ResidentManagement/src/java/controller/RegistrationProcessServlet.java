@@ -5,6 +5,7 @@
 package controller;
 
 import dal.AddressRegistryDAO;
+import dal.LogDAO;
 import dal.RegistrationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import model.AddressRegistry;
+import model.Log;
+import model.Registration;
 import model.User;
 
 /**
@@ -62,7 +66,16 @@ public class RegistrationProcessServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("account");
+        if(user == null){
+            response.sendRedirect("login");
+        }else{
+            RegistrationDAO rdb = new RegistrationDAO();
+            List<Registration> list = rdb.filterRegistrationByUserID(user);
+            request.setAttribute("registrations", list );
+            request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -79,35 +92,73 @@ public class RegistrationProcessServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
-        String province = request.getParameter("province");
-        String city = request.getParameter("city");
-        String district = request.getParameter("district");
-        String ward = request.getParameter("ward");
-        String street = request.getParameter("street");
-        String house = request.getParameter("house");
-        //retrieve kinds of registration
-        AddressRegistryDAO ardb = new AddressRegistryDAO();
+        LogDAO logdb = new LogDAO();
         RegistrationDAO rdb = new RegistrationDAO();
+        AddressRegistryDAO ardb = new AddressRegistryDAO();
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = today.format(formatter);
-        if (action.equalsIgnoreCase("registerAddress")) {
-            AddressRegistry registerAddress = new AddressRegistry(province, city, district, ward, street, house);
-            rdb.newRegistration(user, action, formattedDate, registerAddress);
-            String message = "Đơn của bạn đã được nộp thành công";
-            request.setAttribute("message", message);
-            request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+        if (user == null) {
+            response.sendRedirect("login");
+        } else {
+            if (action.equalsIgnoreCase("registerAddress")) {
+                String province = request.getParameter("province");
+                String city = request.getParameter("city");
+                String district = request.getParameter("district");
+                String ward = request.getParameter("ward");
+                String street = request.getParameter("street");
+                String house = request.getParameter("house");
+                String typeStay = request.getParameter("stay");
+                AddressRegistry registerAddress = new AddressRegistry(province, city, district, ward, street, house);
+                int addressID = ardb.getAddressId(registerAddress);
+                rdb.newRegistrationRegisterAddress(user, typeStay, formattedDate, addressID, action);
+                Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
+                logdb.insertNewLog(log);
+                String message = "Đơn của bạn đã được nộp thành công";
+                request.setAttribute("message", message);
+                request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+            } else if (action.equalsIgnoreCase("moveAddress")) {
+                //incase citizen do not have permanent residence
+                
+                String provinceOld = request.getParameter("provinceOld");
+                String cityOld = request.getParameter("cityOld");
+                String districtOld = request.getParameter("districtOld");
+                String wardOld = request.getParameter("wardOld");
+                String streetOld = request.getParameter("streetOld");
+                String houseOld = request.getParameter("houseOld");
+                String typeStay = "permanent"; //because of gov policy
+                AddressRegistry registerAddressOld = new AddressRegistry(provinceOld, cityOld, districtOld, wardOld, streetOld, houseOld);
+                int oldAddressID = ardb.getAddressId(registerAddressOld);
+                String provinceMoved = request.getParameter("provinceMoved");
+                String cityMoved = request.getParameter("cityMoved");
+                String districtMoved = request.getParameter("districtMoved");
+                String wardMoved = request.getParameter("wardMoved");
+                String streetMoved = request.getParameter("streetMoved");
+                String houseMoved = request.getParameter("houseMoved");
+                AddressRegistry registerAddressMoved = new AddressRegistry(provinceMoved, cityMoved, districtMoved, wardMoved, streetMoved, houseMoved);
+                int movedAddressID = ardb.getAddressId(registerAddressMoved);
+                ////
+                Log log = new Log(user.getUserId(), "Chuyển hộ khẩu", formattedDate);
+                logdb.insertNewLog(log);
+                rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action);
+                String message = "Đơn của bạn đã được nộp thành công";
+                request.setAttribute("message", message);
+                request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+
+            } else if (action.equalsIgnoreCase("separateAddress")) {
+
+            }
         }
+
     }
 
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

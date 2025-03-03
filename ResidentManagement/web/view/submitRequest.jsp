@@ -110,46 +110,7 @@
         </style>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg custom-navbar"> 
-            <div class="container">
-                <a class="navbar-brand col-lg-5" href="#">
-                    <img src="images/logo/logo.png" width="100%"  alt="logo"/>
-                </a>
-                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse px-5 col-lg-7" id="navbarNav">
-                    <ul class="navbar-nav w-100 justify-content-around">
-                        <li class="nav-item align-items-center">
-                            <a class="nav-link fs-5" href="citizenMain.jsp">Trang chủ</a>
-                        </li>
-                        <li class="nav-item align-items-center">
-                            <a class="nav-link fs-5" href="#">Thông báo</a>
-                        </li>
-                        <li class="nav-item dropdown align-items-center">
-                            <a class="nav-link dropdown-toggle fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Đơn gửi
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="">Xem đơn đã gửi</a></li>
-                                <li><a class="dropdown-item" href="submitRequest.jsp">Gửi đơn mới</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown align-items-center">
-                            <a class="nav-link dropdown-toggle align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-user-circle fa-1x me-2"></i> 
-                                <span id="account">${sessionScope.account.fullName}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="citizenAccount.jsp">Hồ sơ</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="logout">Đăng xuất</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <jsp:include page="header.jsp"/>
 
         <div class="hero">
             <div class="form-container">
@@ -167,14 +128,22 @@
                                 </select>
                             </td>
                         </tr>
+                        <tr class="permanentSeparateAddress hidden">
+                            <td>Loại đăng ký hộ khẩu</td>
+                            <td><input type="text" name="name" readonly value="Thường trú"><i style="color:red">*Theo quy định nhà nước, tách hộ khẩu chỉ tách hộ trong cùng một địa chỉ</i></td>
+                        </tr>
+                        <tr class="permanentAddress hidden">
+                            <td>Loại đăng ký hộ khẩu</td>
+                            <td><input type="text" name="name" readonly value="Thường trú"><i style="color:red">*Theo quy định nhà nước, chuyển hộ khẩu chỉ áp dụng cho thường trú</i></td>
+                        </tr>
                         <tr class="typeStay hidden">
                             <td>Loại đăng ký hộ khẩu</td>
                             <td>
-<!--                                retrieve this-->
+                                <!--                                retrieve this-->
                                 <select name="stay" id="">
                                     <option value="permanent">Thường trú</option>
                                     <option value="temporary">Tạm trú</option>
-                                    <option value="temporary-stay">Lưu trú</option>
+                                    <option value="temporaryStay">Lưu trú</option>
                                 </select> 
                             </td>                                
                         </tr>
@@ -190,7 +159,8 @@
                             <td>Số điện thoại</td>
                             <td><input name="phone" readonly value="${account.phoneNumber}" ></td>
                         </tr>
-                        <tr class="hidden new_address">
+
+                        <tr class="hidden newAddress">
                             <td>Hộ khẩu đăng ký mới</td>
                             <td>
                                 <div class="row">
@@ -227,6 +197,80 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr class="hidden oldAddress">
+                            <td>Hộ khẩu cũ</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <select id="province" name="provinceOld" class="form-select">
+                                            <option value="">Tỉnh</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="city" name="cityOld" class="form-select">
+                                            <option value="">Thành phố</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="district" name="districtOld" class="form-select">
+                                            <option value="">Quận</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="ward" name="wardOld" class="form-select">
+                                            <option value="">Phường</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="street" name="streetOld" class="form-select">
+                                            <option value="">Đường</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="house" name="houseOld" class="form-select">
+                                            <option value="">Số nhà</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hidden movedAddress">
+                            <td>Hộ khẩu đăng ký di chuyển</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <select id="province" name="provinceMoved" class="form-select">
+                                            <option value="">Tỉnh</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="city" name="cityMoved" class="form-select">
+                                            <option value="">Thành phố</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="district" name="districtMoved" class="form-select">
+                                            <option value="">Quận</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="ward" name="wardMoved" class="form-select">
+                                            <option value="">Phường</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="street" name="streetMoved" class="form-select">
+                                            <option value="">Đường</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select id="house" name="houseMoved" class="form-select">
+                                            <option value="">Số nhà</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                     <div class="text-center fs-4" width="100px">
                         <input class="btn fs-4" type="submit" value="Gửi đơn">
@@ -239,25 +283,42 @@
 
         </div>
 
-        <footer class="bg-dark text-white text-center p-3">
-            <p>&copy; 2025 PRJ301. All Rights Reserved.</p>
-        </footer>
+        <jsp:include page="footer.jsp"/>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
                                     function toggleFields() {
                                         let requestType = document.getElementById("requestType").value;
                                         let typeStay = document.querySelector(".typeStay");
-                                        let new_address = document.querySelector(".new_address");
+                                        let new_address = document.querySelector(".newAddress");
+                                        let old_address = document.querySelector(".oldAddress");
+                                        let moved_address = document.querySelector(".movedAddress");
+                                        let permanentAddress = document.querySelector(".permanentAddress");
+                                        let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
                                         // Hide all initiall
                                         typeStay.classList.add("hidden");
                                         new_address.classList.add("hidden");
+                                        old_address.classList.add("hidden");
+                                        moved_address.classList.add("hidden");
+                                        permanentAddress.classList.add("hidden");
+                                        permanentSeparateAddress.classList.add("hidden");
                                         if (requestType === "registerAddress") {
                                             typeStay.classList.remove("hidden");
                                             new_address.classList.remove("hidden");
-                                        } else if (requestType === "moveAddress") {
+                                        } else if(requestType === "moveAddress"){
                                             typeStay.classList.add("hidden");
+                                            new_address.classList.add("hidden");
+                                            old_address.classList.remove("hidden");
+                                            moved_address.classList.remove("hidden");
+                                            permanentAddress.classList.remove("hidden");
+                                        } else{
+                                            typeStay.classList.add("hidden");
+                                            new_address.classList.add("hidden");
+                                            old_address.classList.add("hidden");
+                                            moved_address.classList.add("hidden");
+                                            permanentAddress.classList.add("hidden");
+                                            permanentSeparateAddress.classList.remove("hidden");
                                         }
                                     }
 

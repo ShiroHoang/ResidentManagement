@@ -42,6 +42,7 @@
         </style>
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <div class="container hero">
             <div class="account-card p-4">
                 <c:set var="account" value="${sessionScope.account}"/>
@@ -71,6 +72,7 @@
                 </div>
             </div>
         </div>
+        <jsp:include page="footer.jsp"/>
     </body>
     <script>
         const editBtn = document.getElementById("editBtn");
