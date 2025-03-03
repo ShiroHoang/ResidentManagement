@@ -1,4 +1,3 @@
-/ResidentManagement/nbproject/*
 /ResidentManagement/dist
 /ResidentManagement/build.xml
 /ResidentManagement/build
@@ -6,9 +5,3 @@
 ResidentManagement/build
 test.txt
 ResidentManagement/build/*
-ResidentManagement/nbproject/build-impl.xml
-ResidentManagement/nbproject/genfiles.properties
-ResidentManagement/nbproject/project.properties
-ResidentManagement/nbproject/project.xml
-ResidentManagement/nbproject/*
-ResidentManagement/src/java/dal/DBContext.java
