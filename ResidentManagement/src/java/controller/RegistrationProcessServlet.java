@@ -5,6 +5,8 @@
 package controller;
 
 import dal.AddressRegistryDAO;
+import dal.HouseholdDAO;
+import dal.HouseholdMemberDAO;
 import dal.LogDAO;
 import dal.RegistrationDAO;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.AddressRegistry;
+import model.HouseholdMember;
 import model.Log;
 import model.Registration;
 import model.User;
@@ -68,12 +71,12 @@ public class RegistrationProcessServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
-        if(user == null){
+        if (user == null) {
             response.sendRedirect("login");
-        }else{
+        } else {
             RegistrationDAO rdb = new RegistrationDAO();
             List<Registration> list = rdb.filterRegistrationByUserID(user);
-            request.setAttribute("registrations", list );
+            request.setAttribute("registrations", list);
             request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
         }
     }
@@ -95,6 +98,8 @@ public class RegistrationProcessServlet extends HttpServlet {
         LogDAO logdb = new LogDAO();
         RegistrationDAO rdb = new RegistrationDAO();
         AddressRegistryDAO ardb = new AddressRegistryDAO();
+        HouseholdMemberDAO hmdb = new HouseholdMemberDAO();
+        HouseholdDAO hdb = new HouseholdDAO();
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = today.format(formatter);
@@ -109,17 +114,39 @@ public class RegistrationProcessServlet extends HttpServlet {
                 String street = request.getParameter("street");
                 String house = request.getParameter("house");
                 String typeStay = request.getParameter("stay");
+                String headOfHousehold = request.getParameter("headOfHousehold");
+                String relationship = request.getParameter("relationship");
                 AddressRegistry registerAddress = new AddressRegistry(province, city, district, ward, street, house);
                 int addressID = ardb.getAddressId(registerAddress);
-                rdb.newRegistrationRegisterAddress(user, typeStay, formattedDate, addressID, action);
-                Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
-                logdb.insertNewLog(log);
-                String message = "Đơn của bạn đã được nộp thành công";
-                request.setAttribute("message", message);
-                request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                int headOfHouseholdID = hmdb.existHeadOfHouseholdId(headOfHousehold);
+                int householdID = hdb.getHouseholdID(addressID);
+                if (hmdb.existTypeStayPermanentOfMember(user) && typeStay.equalsIgnoreCase("permanent")) {
+                    request.setAttribute("message", "Bạn đã có thường trú, không thể đăng ký thường trú mới");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (!headOfHousehold.isEmpty() && headOfHouseholdID == -1) { //trường hợp nhập sai tên chủ hộ khẩu
+                    request.setAttribute("message", "Bạn đã nhập sai tên chủ hộ khẩu");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (!headOfHousehold.isEmpty() && headOfHouseholdID != -1) { //trường hợp có chủ hộ khẩu và điền đúng tên chủ hộ khẩu
+                    System.out.println("vao day ne 1");
+                    rdb.newRegistrationRegisterAddressWithHeadOfHousehold(user, typeStay, formattedDate, addressID, action, headOfHouseholdID,relationship);
+                    Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
+                    logdb.insertNewLog(log);
+                    request.setAttribute("message", "Đơn của bạn đã được nộp thành công");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (headOfHousehold.isEmpty() && householdID != -1) { //trong trường hợp địa chỉ đã có chủ hộ khẩu và cần nhập tên chủ hộ khẩu
+                    request.setAttribute("message", "Địa chỉ đã có chủ hộ khẩu đăng ký, cần nhập tên chủ hộ khẩu !");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (headOfHousehold.isEmpty() && householdID == -1) { //trong trường hợp địa chỉ chưa có chủ hộ khẩu và không cần nhập tên
+                    System.out.println("vao day ne 2");
+                    rdb.newRegistrationRegisterAddress(user, typeStay, formattedDate, addressID, action);
+                    Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
+                    logdb.insertNewLog(log);
+                    request.setAttribute("message", "Đơn của bạn đã được nộp thành công");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                }
             } else if (action.equalsIgnoreCase("moveAddress")) {
                 //incase citizen do not have permanent residence
-                
+
                 String provinceOld = request.getParameter("provinceOld");
                 String cityOld = request.getParameter("cityOld");
                 String districtOld = request.getParameter("districtOld");

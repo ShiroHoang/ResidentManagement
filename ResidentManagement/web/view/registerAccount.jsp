@@ -61,7 +61,7 @@
                     <h3 style="color:red">${requestScope.error}</h3>
                     <h3 style="color:green">${requestScope.success}</h3>
                     <div class="register-forget opacity">
-                        <a href="login.jsp">Quay lại</a>
+                        <a href="home.html?">Quay lại</a>
                     </div>
                 </div>
                 <div class="circle circle-two"></div>
