@@ -210,32 +210,32 @@
                             <td>
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
-                                        <select id="province" name="provinceOld" class="form-select">
+                                        <select id="provinceOld" name="provinceOld" class="form-select">
                                             <option value="">Tỉnh</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="city" name="cityOld" class="form-select">
+                                        <select id="cityOld" name="cityOld" class="form-select">
                                             <option value="">Thành phố</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="district" name="districtOld" class="form-select">
+                                        <select id="districtOld" name="districtOld" class="form-select">
                                             <option value="">Quận</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="ward" name="wardOld" class="form-select">
+                                        <select id="wardOld" name="wardOld" class="form-select">
                                             <option value="">Phường</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="street" name="streetOld" class="form-select">
+                                        <select id="streetOld" name="streetOld" class="form-select">
                                             <option value="">Đường</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="house" name="houseOld" class="form-select">
+                                        <select id="houseOld" name="houseOld" class="form-select">
                                             <option value="">Số nhà</option>
                                         </select>
                                     </div>
@@ -247,32 +247,32 @@
                             <td>
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
-                                        <select id="province" name="provinceMoved" class="form-select">
+                                        <select id="provinceMoved" name="provinceMoved" class="form-select">
                                             <option value="">Tỉnh</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="city" name="cityMoved" class="form-select">
+                                        <select id="cityMoved" name="cityMoved" class="form-select">
                                             <option value="">Thành phố</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="district" name="districtMoved" class="form-select">
+                                        <select id="districtMoved" name="districtMoved" class="form-select">
                                             <option value="">Quận</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="ward" name="wardMoved" class="form-select">
+                                        <select id="wardMoved" name="wardMoved" class="form-select">
                                             <option value="">Phường</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="street" name="streetMoved" class="form-select">
+                                        <select id="streetMoved" name="streetMoved" class="form-select">
                                             <option value="">Đường</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <select id="house" name="houseMoved" class="form-select">
+                                        <select id="houseMoved" name="houseMoved" class="form-select">
                                             <option value="">Số nhà</option>
                                         </select>
                                     </div>
@@ -303,7 +303,7 @@
                                         let moved_address = document.querySelector(".movedAddress");
                                         let permanentAddress = document.querySelector(".permanentAddress");
                                         let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
-                                        
+
                                         // Hide all initiall
                                         typeStay.classList.add("hidden");
                                         new_address.classList.add("hidden");
@@ -314,13 +314,13 @@
                                         if (requestType === "registerAddress") {
                                             typeStay.classList.remove("hidden");
                                             new_address.classList.remove("hidden");
-                                        } else if(requestType === "moveAddress"){
+                                        } else if (requestType === "moveAddress") {
                                             typeStay.classList.add("hidden");
                                             new_address.classList.add("hidden");
                                             old_address.classList.remove("hidden");
                                             moved_address.classList.remove("hidden");
                                             permanentAddress.classList.remove("hidden");
-                                        } else{
+                                        } else {
                                             typeStay.classList.add("hidden");
                                             new_address.classList.add("hidden");
                                             old_address.classList.add("hidden");
@@ -367,6 +367,16 @@
                 document.getElementById('district').addEventListener('change', filterWards);
                 document.getElementById('ward').addEventListener('change', filterStreets);
                 document.getElementById('street').addEventListener('change', filterHouses);
+                document.getElementById('provinceOld').addEventListener('change', filterCitiesOld);
+                document.getElementById('cityOld').addEventListener('change', filterDistrictsOld);
+                document.getElementById('districtOld').addEventListener('change', filterWardsOld);
+                document.getElementById('wardOld').addEventListener('change', filterStreetsOld);
+                document.getElementById('streetOld').addEventListener('change', filterHousesOld);
+                document.getElementById('provinceMoved').addEventListener('change', filterCitiesMoved);
+                document.getElementById('cityMoved').addEventListener('change', filterDistrictsMoved);
+                document.getElementById('districtMoved').addEventListener('change', filterWardsMoved);
+                document.getElementById('wardMoved').addEventListener('change', filterStreetsMoved);
+                document.getElementById('streetMoved').addEventListener('change', filterHousesMoved);
             });
 
             let allAddresses = []; // Store all address data globally
@@ -377,12 +387,39 @@
                         .then(data => {
                             allAddresses = data;
                             populateProvinces();
+                            populateProvincesOld();
+                            populateProvincesMoved();
                         })
                         .catch(error => console.error('Error fetching addresses:', error));
             }
 
             function populateProvinces() {
                 const provinceSelect = document.getElementById('province');
+                // Get unique provinces
+                const provinces = [...new Set(allAddresses.map(item => item.province))];
+
+                provinces.forEach(province => {
+                    const option = document.createElement('option');
+                    option.value = province;
+                    option.textContent = province;
+                    provinceSelect.appendChild(option);
+                });
+            }
+            function populateProvincesOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                // Get unique provinces
+                const provinces = [...new Set(allAddresses.map(item => item.province))];
+
+                provinces.forEach(province => {
+                    const option = document.createElement('option');
+                    option.value = province;
+                    option.textContent = province;
+                    provinceSelect.appendChild(option);
+                });
+            }
+            
+            function populateProvincesMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
                 // Get unique provinces
                 const provinces = [...new Set(allAddresses.map(item => item.province))];
 
@@ -404,6 +441,54 @@
                 document.getElementById('district').innerHTML = '<option value="">Quận</option>';
                 document.getElementById('ward').innerHTML = '<option value="">Phường</option>';
                 document.getElementById('street').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedProvince) {
+                    const cities = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince)
+                                .map(addr => addr.city))];
+
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            }
+            function filterCitiesOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                const citySelect = document.getElementById('cityOld');
+                const selectedProvince = provinceSelect.value;
+
+                // Clear previous options
+                citySelect.innerHTML = '<option value="">Thành phố</option>';
+                document.getElementById('districtOld').innerHTML = '<option value="">Quận</option>';
+                document.getElementById('wardOld').innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetOld').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedProvince) {
+                    const cities = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince)
+                                .map(addr => addr.city))];
+
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            }
+            function filterCitiesMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
+                const citySelect = document.getElementById('cityMoved');
+                const selectedProvince = provinceSelect.value;
+                console.log(selectedProvince);
+                // Clear previous options
+                citySelect.innerHTML = '<option value="">Thành phố</option>';
+                document.getElementById('districtMoved').innerHTML = '<option value="">Quận</option>';
+                document.getElementById('wardMoved').innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetMoved').innerHTML = '<option value="">Đường</option>';
 
                 if (selectedProvince) {
                     const cities = [...new Set(allAddresses
@@ -444,6 +529,56 @@
                     });
                 }
             }
+            function filterDistrictsOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                const citySelect = document.getElementById('cityOld');
+                const districtSelect = document.getElementById('districtOld');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+
+                // Clear previous options
+                districtSelect.innerHTML = '<option value="">Quận</option>';
+                document.getElementById('wardOld').innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetOld').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedCity) {
+                    const districts = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince && addr.city === selectedCity)
+                                .map(addr => addr.district))];
+
+                    districts.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        districtSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterDistrictsMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
+                const citySelect = document.getElementById('cityMoved');
+                const districtSelect = document.getElementById('districtMoved');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+
+                // Clear previous options
+                districtSelect.innerHTML = '<option value="">Quận</option>';
+                document.getElementById('wardMoved').innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetMoved').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedCity) {
+                    const districts = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince && addr.city === selectedCity)
+                                .map(addr => addr.district))];
+
+                    districts.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        districtSelect.appendChild(option);
+                    });
+                }
+            }
 
             function filterWards() {
                 const provinceSelect = document.getElementById('province');
@@ -457,6 +592,62 @@
                 // Clear previous options
                 wardSelect.innerHTML = '<option value="">Phường</option>';
                 document.getElementById('street').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedDistrict) {
+                    const wards = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict)
+                                .map(addr => addr.ward))];
+
+                    wards.forEach(ward => {
+                        const option = document.createElement('option');
+                        option.value = ward;
+                        option.textContent = ward;
+                        wardSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterWardsOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                const citySelect = document.getElementById('cityOld');
+                const districtSelect = document.getElementById('districtOld');
+                const wardSelect = document.getElementById('wardOld');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+
+                // Clear previous options
+                wardSelect.innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetOld').innerHTML = '<option value="">Đường</option>';
+
+                if (selectedDistrict) {
+                    const wards = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict)
+                                .map(addr => addr.ward))];
+
+                    wards.forEach(ward => {
+                        const option = document.createElement('option');
+                        option.value = ward;
+                        option.textContent = ward;
+                        wardSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterWardsMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
+                const citySelect = document.getElementById('cityMoved');
+                const districtSelect = document.getElementById('districtMoved');
+                const wardSelect = document.getElementById('wardMoved');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+
+                // Clear previous options
+                wardSelect.innerHTML = '<option value="">Phường</option>';
+                document.getElementById('streetMoved').innerHTML = '<option value="">Đường</option>';
 
                 if (selectedDistrict) {
                     const wards = [...new Set(allAddresses
@@ -504,6 +695,66 @@
                     });
                 }
             }
+            function filterStreetsOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                const citySelect = document.getElementById('cityOld');
+                const districtSelect = document.getElementById('districtOld');
+                const wardSelect = document.getElementById('wardOld');
+                const streetSelect = document.getElementById('streetOld');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+
+                // Clear previous options
+                streetSelect.innerHTML = '<option value="">Đường</option>';
+
+                if (selectedWard) {
+                    const streets = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict &&
+                                            addr.ward === selectedWard)
+                                .map(addr => addr.street))];
+
+                    streets.forEach(street => {
+                        const option = document.createElement('option');
+                        option.value = street;
+                        option.textContent = street;
+                        streetSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterStreetsMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
+                const citySelect = document.getElementById('cityMoved');
+                const districtSelect = document.getElementById('districtMoved');
+                const wardSelect = document.getElementById('wardMoved');
+                const streetSelect = document.getElementById('streetMoved');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+
+                // Clear previous options
+                streetSelect.innerHTML = '<option value="">Đường</option>';
+
+                if (selectedWard) {
+                    const streets = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict &&
+                                            addr.ward === selectedWard)
+                                .map(addr => addr.street))];
+
+                    streets.forEach(street => {
+                        const option = document.createElement('option');
+                        option.value = street;
+                        option.textContent = street;
+                        streetSelect.appendChild(option);
+                    });
+                }
+            }
 
             function filterHouses() {
                 const provinceSelect = document.getElementById('province');
@@ -512,6 +763,70 @@
                 const wardSelect = document.getElementById('ward');
                 const streetSelect = document.getElementById('street');
                 const houseSelect = document.getElementById('house');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+                const selectedStreet = streetSelect.value;
+
+                // Clear previous options
+                houseSelect.innerHTML = '<option value="">Nhà</option>';
+
+                if (selectedStreet) {
+                    const houses = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict &&
+                                            addr.ward === selectedWard && addr.street === selectedStreet)
+                                .map(addr => addr.house))];
+
+                    houses.forEach(house => {
+                        const option = document.createElement('option');
+                        option.value = house;
+                        option.textContent = house;
+                        houseSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterHousesOld() {
+                const provinceSelect = document.getElementById('provinceOld');
+                const citySelect = document.getElementById('cityOld');
+                const districtSelect = document.getElementById('districtOld');
+                const wardSelect = document.getElementById('wardOld');
+                const streetSelect = document.getElementById('streetOld');
+                const houseSelect = document.getElementById('houseOld');
+                const selectedProvince = provinceSelect.value;
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+                const selectedStreet = streetSelect.value;
+
+                // Clear previous options
+                houseSelect.innerHTML = '<option value="">Nhà</option>';
+
+                if (selectedStreet) {
+                    const houses = [...new Set(allAddresses
+                                .filter(addr => addr.province === selectedProvince &&
+                                            addr.city === selectedCity &&
+                                            addr.district === selectedDistrict &&
+                                            addr.ward === selectedWard && addr.street === selectedStreet)
+                                .map(addr => addr.house))];
+
+                    houses.forEach(house => {
+                        const option = document.createElement('option');
+                        option.value = house;
+                        option.textContent = house;
+                        houseSelect.appendChild(option);
+                    });
+                }
+            }
+            function filterHousesMoved() {
+                const provinceSelect = document.getElementById('provinceMoved');
+                const citySelect = document.getElementById('cityMoved');
+                const districtSelect = document.getElementById('districtMoved');
+                const wardSelect = document.getElementById('wardMoved');
+                const streetSelect = document.getElementById('streetMoved');
+                const houseSelect = document.getElementById('houseMoved');
                 const selectedProvince = provinceSelect.value;
                 const selectedCity = citySelect.value;
                 const selectedDistrict = districtSelect.value;
