@@ -35,6 +35,24 @@ public class RegistrationDAO extends DBContext {
         return null;
     }
 
+    public void newRegistrationRegisterAddressWithHeadOfHousehold(User user, String registrationType, 
+            String startDate, int addressID, String requestType, int headOfHouseholdID, String relationship) {
+        String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID, RequestType, HeadOfHouseholdID, Relationship) values(?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            stmt.setString(2, registrationType);
+            stmt.setString(3, startDate);
+            stmt.setInt(4, addressID);
+            stmt.setString(5, requestType);
+            stmt.setInt(6, headOfHouseholdID);
+            stmt.setString(7, relationship);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     public void newRegistrationRegisterAddress(User user, String registrationType, String startDate, int addressID, String requestType) {
         String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID, RequestType) values(?,?,?,?,?)";
         try {

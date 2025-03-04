@@ -159,6 +159,14 @@
                             <td>Số điện thoại</td>
                             <td><input name="phone" readonly value="${account.phoneNumber}" ></td>
                         </tr>
+                        <tr class="headOfHousehold">
+                            <td>Chủ hộ khẩu (nếu có)</td>
+                            <td><input name="headOfHousehold" type="text" ></td>
+                        </tr>
+                        <tr class="relationship">
+                            <td>Mối quan hệ với chủ hộ khẩu</td>
+                            <td><input name="relationship" type="text" ></td>
+                        </tr>
 
                         <tr class="hidden newAddress">
                             <td>Hộ khẩu đăng ký mới</td>
@@ -295,7 +303,7 @@
                                         let moved_address = document.querySelector(".movedAddress");
                                         let permanentAddress = document.querySelector(".permanentAddress");
                                         let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
-
+                                        
                                         // Hide all initiall
                                         typeStay.classList.add("hidden");
                                         new_address.classList.add("hidden");
