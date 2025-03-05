@@ -8,9 +8,9 @@ package model;
  *
  * @author huyng
  */
-public class HouseholdMember {
-    private int memberId;
-    private int householdId;
+public class HouseholdMember { //comment gi day
+    private int memberId; //them comment gi day
+    private int householdId; //another comment
     private int userId;
     private String relationship;
     private String typeStay;
