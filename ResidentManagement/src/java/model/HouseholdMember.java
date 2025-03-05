@@ -8,7 +8,7 @@ package model;
  *
  * @author huyng
  */
-public class HouseholdMember {
+public class HouseholdMember { //comment gi day
     private int memberId;
     private int householdId;
     private int userId;
