@@ -5,6 +5,8 @@
 package controller;
 
 import dal.AddressRegistryDAO;
+import dal.HouseholdDAO;
+import dal.HouseholdMemberDAO;
 import dal.LogDAO;
 import dal.RegistrationDAO;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import model.AddressRegistry;
+import model.HouseholdMember;
 import model.Log;
 import model.Registration;
 import model.User;
@@ -68,12 +71,12 @@ public class RegistrationProcessServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
-        if(user == null){
+        if (user == null) {
             response.sendRedirect("login");
-        }else{
+        } else {
             RegistrationDAO rdb = new RegistrationDAO();
             List<Registration> list = rdb.filterRegistrationByUserID(user);
-            request.setAttribute("registrations", list );
+            request.setAttribute("registrations", list);
             request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
         }
     }
@@ -92,6 +95,8 @@ public class RegistrationProcessServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
+        HouseholdMemberDAO hhmd = new HouseholdMemberDAO();
+        HouseholdDAO hhd = new HouseholdDAO();
         LogDAO logdb = new LogDAO();
         RegistrationDAO rdb = new RegistrationDAO();
         AddressRegistryDAO ardb = new AddressRegistryDAO();
@@ -119,7 +124,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                 request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
             } else if (action.equalsIgnoreCase("moveAddress")) {
                 //incase citizen do not have permanent residence
-                
+
                 String provinceOld = request.getParameter("provinceOld");
                 String cityOld = request.getParameter("cityOld");
                 String districtOld = request.getParameter("districtOld");
@@ -146,7 +151,22 @@ public class RegistrationProcessServlet extends HttpServlet {
                 request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
 
             } else if (action.equalsIgnoreCase("separateAddress")) {
-
+                int householdId = hhmd.findPermanentHouseHoldId(user);
+                String typeStay = "permanent";
+                if ( householdId == -1) {
+                    String message = "Bạn chưa có hộ khẩu đăng kí thường trú để thực hiện tách hộ khẩu!";
+                    request.setAttribute("message", message);
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else {
+                    int headOfHouseHoldId = hhd.getHeadOfHouseHoldByHouseHoldId(householdId);
+                    int currentAddressID = hhd.getAddressIdByHouseHoldId(householdId);
+                    Log log = new Log(user.getUserId(), "Đơn tách hộ khẩu", formattedDate);
+                    logdb.insertNewLog(log);
+                    rdb.newRegistrationSeparateAddress(user, typeStay, formattedDate,currentAddressID, headOfHouseHoldId, action);
+                    String message = "Đơn của bạn đã được nộp thành công";
+                    request.setAttribute("message", message);
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                }
             }
         }
 

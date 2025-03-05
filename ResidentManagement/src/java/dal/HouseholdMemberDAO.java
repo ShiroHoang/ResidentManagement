@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Household;
 import model.HouseholdMember;
+import model.User;
 
 /**
  *
@@ -33,5 +34,24 @@ public class HouseholdMemberDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+
+    public int findPermanentHouseHoldId(User user) {
+        String sql = "select * from Households hh "
+                + "join HouseholdMembers hhm on hh.HouseholdID = hhm.HouseholdID "
+                + "where UserID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                if (rs.getString("TypeStay").equals("permanent")) {
+                    return rs.getInt("HouseholdID");
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
     }
 }

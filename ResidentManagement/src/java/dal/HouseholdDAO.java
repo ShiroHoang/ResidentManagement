@@ -34,4 +34,34 @@ public class HouseholdDAO extends DBContext {
         }
         return null;
     }
+
+    public int getHeadOfHouseHoldByHouseHoldId(int householdId) {
+        String sql = "select * from Households where householdId = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("HeadOfHouseholdID");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    public int getAddressIdByHouseHoldId(int householdId) {
+        String sql = "select * from Households where householdId = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("AddressID");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
 }
