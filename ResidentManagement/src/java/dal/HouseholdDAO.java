@@ -79,4 +79,22 @@ public class HouseholdDAO extends DBContext {
         }
         return -1;
     }
+    
+    public int getHeadOfHouseholeIdByAddressId(int addressId){
+        String sql = """
+                     select Households.HeadOfHouseholdID 
+                     from Households where AddressID = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, addressId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("HeadOfHouseholdID");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
 }

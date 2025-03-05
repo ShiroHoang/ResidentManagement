@@ -129,7 +129,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                     request.setAttribute("message", "Bạn đã nhập sai tên chủ hộ khẩu");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
                 } else if (!headOfHousehold.isEmpty() && headOfHouseholdID != -1) { //trường hợp có chủ hộ khẩu và điền đúng tên chủ hộ khẩu
-                    rdb.newRegistrationRegisterAddressWithHeadOfHousehold(user, typeStay, formattedDate, addressID, action, headOfHouseholdID,relationship);
+                    rdb.newRegistrationRegisterAddressWithHeadOfHousehold(user, typeStay, formattedDate, addressID, action, headOfHouseholdID, relationship);
                     Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
                     logdb.insertNewLog(log);
                     request.setAttribute("message", "Đơn của bạn đã được nộp thành công");
@@ -147,6 +147,14 @@ public class RegistrationProcessServlet extends HttpServlet {
             } else if (action.equalsIgnoreCase("moveAddress")) {
                 //incase citizen do not have permanent residence
 
+                String headOfHouseholdFullName = request.getParameter("headOfHousehold");
+                String relationship = request.getParameter("relationship");
+                //incase citizen do not have permanent residence
+                if (!hmdb.existTypeStayPermanentOfMember(user)) {
+                    request.setAttribute("message", "Bạn chưa có hộ khẩu thường trú");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                    return;
+                }
                 String provinceOld = request.getParameter("provinceOld");
                 String cityOld = request.getParameter("cityOld");
                 String districtOld = request.getParameter("districtOld");
@@ -156,6 +164,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                 String typeStay = "permanent"; //because of gov policy
                 AddressRegistry registerAddressOld = new AddressRegistry(provinceOld, cityOld, districtOld, wardOld, streetOld, houseOld);
                 int oldAddressID = ardb.getAddressId(registerAddressOld);
+
                 String provinceMoved = request.getParameter("provinceMoved");
                 String cityMoved = request.getParameter("cityMoved");
                 String districtMoved = request.getParameter("districtMoved");
@@ -164,18 +173,37 @@ public class RegistrationProcessServlet extends HttpServlet {
                 String houseMoved = request.getParameter("houseMoved");
                 AddressRegistry registerAddressMoved = new AddressRegistry(provinceMoved, cityMoved, districtMoved, wardMoved, streetMoved, houseMoved);
                 int movedAddressID = ardb.getAddressId(registerAddressMoved);
-                ////
-                Log log = new Log(user.getUserId(), "Chuyển hộ khẩu", formattedDate);
-                logdb.insertNewLog(log);
-                rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action);
-                String message = "Đơn của bạn đã được nộp thành công";
-                request.setAttribute("message", message);
-                request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+
+                if (oldAddressID == -1 || movedAddressID == -1) {
+                    request.setAttribute("message", "Vui lòng nhập đầy đủ thông tin địa chỉ");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                    return;
+                }
+
+                int headOfHouseholdByAddressId = hdb.getHeadOfHouseholeIdByAddressId(movedAddressID);
+                if (headOfHouseholdByAddressId != -1 && headOfHouseholdFullName.isEmpty()) {
+                    request.setAttribute("message", "Địa chỉ đăng ký đã có chủ hộ khẩu! Vui lòng nhập tên chủ hộ");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (headOfHouseholdByAddressId != -1 && relationship.isEmpty()) {
+                    request.setAttribute("message", "Địa chỉ đăng ký có chủ hộ khẩu! Vui lòng nhập quan hệ với chủ hộ");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else if (headOfHouseholdByAddressId != -1
+                        && headOfHouseholdByAddressId != hmdb.existHeadOfHouseholdId(headOfHouseholdFullName)) {
+                    request.setAttribute("message", "Sai tên chủ hộ! Vui lòng nhập lại");
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else {
+                    Log log = new Log(user.getUserId(), "Chuyển hộ khẩu", formattedDate);
+                    logdb.insertNewLog(log);
+                    rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action);
+                    String message = "Đơn của bạn đã được nộp thành công";
+                    request.setAttribute("message", message);
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                }
 
             } else if (action.equalsIgnoreCase("separateAddress")) {
                 int householdId = hhmd.findPermanentHouseHoldId(user);
                 String typeStay = "permanent";
-                if ( householdId == -1) {
+                if (householdId == -1) {
                     String message = "Bạn chưa có hộ khẩu đăng kí thường trú để thực hiện tách hộ khẩu!";
                     request.setAttribute("message", message);
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
@@ -184,7 +212,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                     int currentAddressID = hhd.getAddressIdByHouseHoldId(householdId);
                     Log log = new Log(user.getUserId(), "Đơn tách hộ khẩu", formattedDate);
                     logdb.insertNewLog(log);
-                    rdb.newRegistrationSeparateAddress(user, typeStay, formattedDate,currentAddressID, headOfHouseHoldId, action);
+                    rdb.newRegistrationSeparateAddress(user, typeStay, formattedDate, currentAddressID, headOfHouseHoldId, action);
                     String message = "Đơn của bạn đã được nộp thành công";
                     request.setAttribute("message", message);
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
