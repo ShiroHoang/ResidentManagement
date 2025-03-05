@@ -127,7 +127,6 @@ public class RegistrationProcessServlet extends HttpServlet {
                     request.setAttribute("message", "Bạn đã nhập sai tên chủ hộ khẩu");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
                 } else if (!headOfHousehold.isEmpty() && headOfHouseholdID != -1) { //trường hợp có chủ hộ khẩu và điền đúng tên chủ hộ khẩu
-                    System.out.println("vao day ne 1");
                     rdb.newRegistrationRegisterAddressWithHeadOfHousehold(user, typeStay, formattedDate, addressID, action, headOfHouseholdID,relationship);
                     Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
                     logdb.insertNewLog(log);
@@ -137,7 +136,6 @@ public class RegistrationProcessServlet extends HttpServlet {
                     request.setAttribute("message", "Địa chỉ đã có chủ hộ khẩu đăng ký, cần nhập tên chủ hộ khẩu !");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
                 } else if (headOfHousehold.isEmpty() && householdID == -1) { //trong trường hợp địa chỉ chưa có chủ hộ khẩu và không cần nhập tên
-                    System.out.println("vao day ne 2");
                     rdb.newRegistrationRegisterAddress(user, typeStay, formattedDate, addressID, action);
                     Log log = new Log(user.getUserId(), "Đăng ký hộ khẩu mới", formattedDate);
                     logdb.insertNewLog(log);
