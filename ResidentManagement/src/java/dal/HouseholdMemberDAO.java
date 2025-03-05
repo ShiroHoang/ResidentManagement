@@ -35,13 +35,34 @@ public class HouseholdMemberDAO extends DBContext {
         }
         return null;
     }
+
+    public int findPermanentHouseHoldId(User user) {
+        String sql = "select * from Households hh "
+                + "join HouseholdMembers hhm on hh.HouseholdID = hhm.HouseholdID "
+                + "where UserID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                if (rs.getString("TypeStay").equals("permanent")) {
+                    return rs.getInt("HouseholdID");
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
     //check if a user already has permanent resident
-    public boolean existTypeStayPermanentOfMember(User user){
+
+    public boolean existTypeStayPermanentOfMember(User user) {
         String sql = "select * from HouseholdMembers where UserID = ? and TypeStay = 'permanent'";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, user.getUserId());
             ResultSet rs = stmt.executeQuery();
+
             String typeStay = "";
             while (rs.next()) {
                 typeStay = rs.getString("TypeStay");
@@ -52,8 +73,8 @@ public class HouseholdMemberDAO extends DBContext {
         }
         return false;
     }
-    
-    public int existHeadOfHouseholdId(String fullname ){
+
+    public int existHeadOfHouseholdId(String fullname) {
         String sql = """
                      select h.HeadOfHouseholdID
                      from Households h

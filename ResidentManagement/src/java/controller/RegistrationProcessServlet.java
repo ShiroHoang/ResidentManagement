@@ -95,6 +95,8 @@ public class RegistrationProcessServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
+        HouseholdMemberDAO hhmd = new HouseholdMemberDAO();
+        HouseholdDAO hhd = new HouseholdDAO();
         LogDAO logdb = new LogDAO();
         RegistrationDAO rdb = new RegistrationDAO();
         AddressRegistryDAO ardb = new AddressRegistryDAO();
@@ -171,7 +173,22 @@ public class RegistrationProcessServlet extends HttpServlet {
                 request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
 
             } else if (action.equalsIgnoreCase("separateAddress")) {
-
+                int householdId = hhmd.findPermanentHouseHoldId(user);
+                String typeStay = "permanent";
+                if ( householdId == -1) {
+                    String message = "Bạn chưa có hộ khẩu đăng kí thường trú để thực hiện tách hộ khẩu!";
+                    request.setAttribute("message", message);
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                } else {
+                    int headOfHouseHoldId = hhd.getHeadOfHouseHoldByHouseHoldId(householdId);
+                    int currentAddressID = hhd.getAddressIdByHouseHoldId(householdId);
+                    Log log = new Log(user.getUserId(), "Đơn tách hộ khẩu", formattedDate);
+                    logdb.insertNewLog(log);
+                    rdb.newRegistrationSeparateAddress(user, typeStay, formattedDate,currentAddressID, headOfHouseHoldId, action);
+                    String message = "Đơn của bạn đã được nộp thành công";
+                    request.setAttribute("message", message);
+                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
+                }
             }
         }
 

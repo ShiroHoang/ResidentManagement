@@ -83,7 +83,23 @@ public class RegistrationDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
     }
-
+    
+    public void newRegistrationSeparateAddress(User user, String registrationType,String startDate, int newAddressID, int HeadOfHouseholdID, String requestType) {
+        String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID, HeadOfHouseholdID, RequestType) values(?,?,?,?,?,?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            stmt.setString(2, registrationType);
+            stmt.setString(3, startDate);
+            stmt.setInt(4, newAddressID);
+            stmt.setInt(5, HeadOfHouseholdID);
+            stmt.setString(6, requestType);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     public List<Registration> filterRegistrationByUserID(User user) {
         String sql = "select * from Registrations where UserID = ?";
         try {
@@ -101,5 +117,5 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
-
+    
 }
