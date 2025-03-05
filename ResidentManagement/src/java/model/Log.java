@@ -10,7 +10,7 @@ package model;
  * @author huyng
  */
 public class Log {
-    private int logId;
+    private int logId;//hi log
     private int userId;
     private String action;
     private String timestamp;
