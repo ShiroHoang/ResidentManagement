@@ -35,6 +35,13 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="registration">Xem đơn đã gửi</a></li>
                                 <li><a class="dropdown-item" href="nav?action=submitRequest">Gửi đơn mới</a></li>
+                                <%
+                                session = request.getSession();
+                                User user = (User) session.getAttribute("account");
+                                if (user.getRole().equalsIgnoreCase("police")) {
+                            %>
+                                <li><a class="dropdown-item" href="nav?action=approveRequest">Duyệt đơn</a></li>
+                            <% }%>
                             </ul>
                         </li>
                         <li class="nav-item dropdown align-items-center">
