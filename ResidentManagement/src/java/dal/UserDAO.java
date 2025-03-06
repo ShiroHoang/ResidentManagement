@@ -135,4 +135,6 @@ public class UserDAO extends DBContext {
             logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
         }
     }
+    
+
 }

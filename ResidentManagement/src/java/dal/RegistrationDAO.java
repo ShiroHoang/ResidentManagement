@@ -35,7 +35,7 @@ public class RegistrationDAO extends DBContext {
         return null;
     }
 
-    public void newRegistrationRegisterAddressWithHeadOfHousehold(User user, String registrationType, 
+    public void newRegistrationRegisterAddressWithHeadOfHousehold(User user, String registrationType,
             String startDate, int addressID, String requestType, int headOfHouseholdID, String relationship) {
         String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID, RequestType, HeadOfHouseholdID, Relationship) values(?,?,?,?,?,?,?)";
         try {
@@ -83,8 +83,8 @@ public class RegistrationDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
     }
-    
-    public void newRegistrationSeparateAddress(User user, String registrationType,String startDate, int newAddressID, int HeadOfHouseholdID, String requestType) {
+
+    public void newRegistrationSeparateAddress(User user, String registrationType, String startDate, int newAddressID, int HeadOfHouseholdID, String requestType) {
         String sql = "insert into Registrations(UserID, RegistrationType, StartDate, NewAddressID, HeadOfHouseholdID, RequestType) values(?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -99,7 +99,7 @@ public class RegistrationDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     public List<Registration> filterRegistrationByUserID(User user) {
         String sql = "select * from Registrations where UserID = ?";
         try {
@@ -117,5 +117,33 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
-    
+
+    public List<Registration> getRegistrationByUserId(User user) {
+        String sql = "select * from Registrations where UserID = ?";
+        UserDAO udb = new UserDAO();
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user.getUserId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                //trong truong hop co head of household
+                Integer headOfHouseholdID = rs.getInt("HeadOfHouseholdID");
+                String headOfHouseholdName = "Không có"; // Default value
+
+                if (!rs.wasNull()) { // Check if the previous `getInt()` retrieved a NULL value
+                    User headOfHousehold = udb.getUserById(headOfHouseholdID);
+                    headOfHouseholdName = headOfHousehold.getFullName();
+                }
+                list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"),
+                        rs.getString("Comments"), rs.getString("Relationship"), headOfHouseholdName, rs.getString("RequestType")));
+            }
+            return list;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
 }

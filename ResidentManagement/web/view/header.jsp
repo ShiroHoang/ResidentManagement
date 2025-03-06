@@ -4,6 +4,7 @@
     Author     : huyng
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -33,7 +34,7 @@
                                 Đơn gửi
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="registration">Xem đơn đã gửi</a></li>
+                                <li><a class="dropdown-item" href="nav?action=viewRequest">Xem đơn đã gửi</a></li>
                                 <li><a class="dropdown-item" href="nav?action=submitRequest">Gửi đơn mới</a></li>
                             </ul>
                         </li>
