@@ -63,6 +63,9 @@
             }
             table {
                 margin: auto;
+                background-color: white;
+                border-radius: 10px;
+                color: black;
             }
             td {
                 padding: 10px;
@@ -71,43 +74,45 @@
     </head>
     <body>
         <jsp:include page="header.jsp"/>
-        <form action="PoliceUpdateAccount" method="POST">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="userId" value="${user.userId}">
+        <div class = "hero">
+            <form action="PoliceUpdateAccount" method="POST">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="userId" value="${user.userId}">
 
-            <table>
-                <tr>
-                    <td>Họ và tên: </td>
-                    <td><input type="text" name="fullName"
-                               value="<c:out value="${user.fullName}"></c:out>"></td>
-                    </tr>
+                <table>
+                    <tr>
+                        <td>Họ và tên: </td>
+                        <td><input type="text" name="fullName"
+                                   value="<c:out value="${user.fullName}"></c:out>"></td>
+                        </tr>
 
-                    <tr>
-                        <td>Địa chỉ: </td>
-                        <td><input type="text" name="address"
-                                   value="<c:out value="${user.address}"></c:out>"></td>
-                    </tr>
-                    <tr>
-                        <td>Phone: </td>
-                        <td><input type="text" name="phoneNum"
-                                   value="<c:out value="${user.phoneNumber}"></c:out>" ></td>
-                    </tr>
-                    <tr>
-                        <td>Role: </td>
-                        <td>
-                            <select name="roleId">
-                                <option value="Citizen">Dân thường</option>
-                                <option value="Police">Công An</option>
-                                <option value="AreaLeader">Tổ trưởng khu phố</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="submit" value="Thay đổi"></td>
-                    </tr>
-                </table>
-            </form> 
-            <h3>${message}</h3>
+                        <tr>
+                            <td>Địa chỉ: </td>
+                            <td><input type="text" name="address"
+                                       value="<c:out value="${user.address}"></c:out>"></td>
+                        </tr>
+                        <tr>
+                            <td>Phone: </td>
+                            <td><input type="text" name="phoneNum"
+                                       value="<c:out value="${user.phoneNumber}"></c:out>" ></td>
+                        </tr>
+                        <tr>
+                            <td>Role: </td>
+                            <td>
+                                <select name="roleId">
+                                    <option value="Citizen">Dân thường</option>
+                                    <option value="Police">Công An</option>
+                                    <option value="AreaLeader">Tổ trưởng khu phố</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Thay đổi"></td>
+                        </tr>
+                    </table>
+                </form> 
+                <h3>${message}</h3>
+        </div>
         <jsp:include page="footer.jsp"/>
     </body>
 </html>

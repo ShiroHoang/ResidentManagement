@@ -34,6 +34,7 @@
                 align-items: center;
                 justify-content: center;
                 text-align: center;
+                flex-direction: column;
             }
             .navbar-nav .nav-link:hover {
                 color: #ffcc00 !important;
@@ -44,7 +45,7 @@
                     font-size: 2rem;
                     height: 300px;
                 }
-                
+
                 .navbar-brand{
                     width: 100%;
                 }
@@ -69,7 +70,7 @@
             td {
                 padding: 10px;
             }
-            
+
             a {
                 font-size: 20px;
             }
@@ -77,46 +78,57 @@
                 text-align: center;
             }
             
+            table {
+                background-color: white;
+                border-radius: 10px;
+                color: black;
+            }
+            
+            .page{
+                background: white;
+            }
         </style>
     </head>
     <body>
         <jsp:include page="header.jsp"/>
 
-        <h1>Danh sách:</h1>
-        <c:if test="${list == null || list.isEmpty()}">
-        <h2>Không có dân</h2>
-        </c:if>
-        <c:if test="${list != null && !list.isEmpty()}">
-        <div>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Họ và tên</th>
-                        <th>Địa chỉ</th>
-                        <th>Số điện thoại</th>
-                        <th>Chức vụ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="user" items="${list}">
-                    <tr>
-                        <td><c:out value="${user.fullName}"></c:out></td>
-                        <td><c:out value="${user.address}"></c:out></td>
-                        <td><c:out value="${user.phoneNumber}"></c:out></td>
-                        <td><c:out value="${user.role}"></c:out></td>                        
-                        <td>
-                            <input type = "button" value="Chỉnh sửa" onclick="location.href='PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
-                        </td>
-                    </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-        </c:if>
-        <div class = "page">
-        <c:forEach var="pagenum" begin="${1}" end="${page}">
-            <a href="PoliceUpdateAccount?pagenum=${pagenum}">${pagenum}</a>
-        </c:forEach>
+        <div class="hero">
+            <h1>Danh sách:</h1>
+            <c:if test="${list == null || list.isEmpty()}">
+                <h2>Không có dân</h2>
+            </c:if>
+            <c:if test="${list != null && !list.isEmpty()}">
+                <div>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Họ và tên</th>
+                                <th>Địa chỉ</th>
+                                <th>Số điện thoại</th>
+                                <th>Chức vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="user" items="${list}">
+                                <tr>
+                                    <td><c:out value="${user.fullName}"></c:out></td>
+                                    <td><c:out value="${user.address}"></c:out></td>
+                                    <td><c:out value="${user.phoneNumber}"></c:out></td>
+                                    <td><c:out value="${user.role}"></c:out></td>                        
+                                        <td>
+                                            <input type = "button" value="Chỉnh sửa" onclick="location.href = 'PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
+                                        </td>
+                                    </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </c:if>
+            <div class = "page">
+                <c:forEach var="pagenum" begin="${1}" end="${page}">                    
+                    <a href="PoliceUpdateAccount?pagenum=${pagenum}">${pagenum}</a>                  
+                </c:forEach>
+            </div>
         </div>
         <jsp:include page="footer.jsp"/>
     </body>
