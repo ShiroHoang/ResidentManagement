@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Registration;
 import model.User;
-
+import dal.UserDAO;
+import jakarta.servlet.RequestDispatcher;
+import java.util.ArrayList;
 /**
  *
  * @author huyng
@@ -61,6 +63,7 @@ public class NavigationServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
         User user = (User) session.getAttribute("account");
+        UserDAO udb = new UserDAO();
         RegistrationDAO rdb = new RegistrationDAO();
         if(user == null){
             response.sendRedirect("login");
@@ -77,6 +80,13 @@ public class NavigationServlet extends HttpServlet {
             List<Registration> list = rdb.getRegistrationByUserId(user);
             request.setAttribute("registrations", list);
             request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
+        }  else if (action.equalsIgnoreCase("accountList")) {
+            ArrayList<User> users = udb.getAll();
+            ArrayList<User> list = udb.getUserByStartAndEnd(users, 0, 6);
+            request.setAttribute("list", list);
+            int page = (users.size() % 6 == 0)? users.size() / 6 : users.size() / 6 + 1; //Get number of page
+            request.setAttribute("page", page);            
+            request.getRequestDispatcher("view/accountList.jsp").forward(request, response);
         }
     } 
 
