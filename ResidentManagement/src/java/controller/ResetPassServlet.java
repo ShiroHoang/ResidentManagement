@@ -79,7 +79,7 @@ public class ResetPassServlet extends HttpServlet {
         
         if (!newPass.equals(confirmPass)) {
             request.setAttribute("error", "Mật khẩu không khớp!");
-            request.getRequestDispatcher("passwordReset.jsp").forward(request, response);
+            request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
             return;
         }
         
@@ -88,13 +88,13 @@ public class ResetPassServlet extends HttpServlet {
         
         if (user == null) {
             request.setAttribute("error", "Thông tin không khớp hoặc không tồn tại!");
-            request.getRequestDispatcher("passwordReset.jsp").forward(request, response);
+            request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
             return;
         }
         
         userdb.updateAccountPassword(user.getUserId(), newPass);
         request.setAttribute("success", "Đổi mật khẩu thành công!");
-        request.getRequestDispatcher("passwordReset.jsp").forward(request, response);
+        request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
     }
 
     /** 
