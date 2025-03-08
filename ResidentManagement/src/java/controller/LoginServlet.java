@@ -85,6 +85,9 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("account",user);
         user.getRole().equals("Police");
         request.getRequestDispatcher("view/citizenMain.jsp").forward(request, response);
+        
+        session.setAttribute("account",user);
+        request.getRequestDispatcher("view/viewListDetail.jsp").forward(request, response);
     }
 
     /**

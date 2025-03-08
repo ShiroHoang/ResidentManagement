@@ -112,4 +112,28 @@ public class AddressRegistryDAO extends DBContext {
             return -1;
         }
     }
+    
+    public String getAddressById(int addressId) {
+        String sql = "select * from AddressRegistry where AddressID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, addressId);
+            ResultSet rs = stmt.executeQuery();
+            List<AddressRegistry> list = new ArrayList<>();
+            String address = "";
+            while (rs.next()) {
+                address =  rs.getString("Province") +  
+                            ", " + rs.getString("City") + 
+                            ", " + rs.getString("District")  +
+                            ", " + rs.getString("Ward")  +
+                            ", " + rs.getString("Street")  +
+                            ", " + rs.getString("HouseNumber");
+                
+            }
+            return address;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
 }

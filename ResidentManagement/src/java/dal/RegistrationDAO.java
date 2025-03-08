@@ -68,8 +68,9 @@ public class RegistrationDAO extends DBContext {
         }
     }
 
-    public void newRegistrationMovedAddress(User user, String registrationType, String startDate, int oldAddressID, int newAddressID, String requestType) {
-        String sql = "insert into Registrations(UserID, RegistrationType, StartDate, OldAddressID, NewAddressID, RequestType) values(?,?,?,?,?,?)";
+    public void newRegistrationMovedAddress(User user, String registrationType, String startDate, int oldAddressID, int newAddressID
+                                                , String requestType, int headOfHouseholdID, String relationship) {
+        String sql = "insert into Registrations(UserID, RegistrationType, StartDate, OldAddressID, NewAddressID, RequestType, HeadOfHouseholdID, Relationship) values(?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, user.getUserId());
@@ -78,6 +79,8 @@ public class RegistrationDAO extends DBContext {
             stmt.setInt(4, oldAddressID);
             stmt.setInt(5, newAddressID);
             stmt.setString(6, requestType);
+            stmt.setInt(7, headOfHouseholdID);
+            stmt.setString(8, relationship);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -144,6 +147,131 @@ public class RegistrationDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+    
+    public List<Registration> getRequestTypeList(String requestType) {
+        String sql = "select * from Registrations where RequestType = ? and Status = 'Pending'";
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, requestType);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"), rs.getString("Comments")));
+            }
+            return list;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public Registration getRegistrationById(int registrationId) {
+        String sql = "select * from Registrations where RegistrationID = ?";
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"), rs.getString("Comments")));
+            }
+            return list.get(0);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public String getRequestTypeByRegistrationId(int registrationId){
+        String sql = "select RequestType from Registrations where RegistrationID = ?";
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getString("RequestType");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public int getNewAddressIdByRegistrationId(int registrationId){
+        String sql = "select NewAddressID from Registrations where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("NewAddressID");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    public int getOldAddressIdByRegistrationId(int registrationId){
+        String sql = "select OldAddressID from Registrations where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("OldAddressID");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    public int getHeadOfHouseholdIdByRegistrationId(int registrationId){
+        String sql = "select HeadOfHouseholdID from Registrations where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("HeadOfHouseholdID");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    public String getRelationshipByRegistrationId(int registrationId){
+        String sql = "select Relationship from Registrations where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getString("Relationship");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public List<Registration> getRequestListByPage(List<Registration> rlist, int start, int end) {
+        List<Registration> list = new ArrayList<>();
+        for(int i=start; i<end; i++){
+            list.add(rlist.get(i));
+        }
+        return list;
     }
 
 }

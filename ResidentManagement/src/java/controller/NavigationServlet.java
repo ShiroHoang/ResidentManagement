@@ -87,6 +87,8 @@ public class NavigationServlet extends HttpServlet {
             int page = (users.size() % 6 == 0)? users.size() / 6 : users.size() / 6 + 1; //Get number of page
             request.setAttribute("page", page);            
             request.getRequestDispatcher("view/accountList.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("approveRequest")){
+            request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
         }
     } 
 

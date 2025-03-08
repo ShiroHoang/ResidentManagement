@@ -194,7 +194,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                 } else {
                     Log log = new Log(user.getUserId(), "Chuyển hộ khẩu", formattedDate);
                     logdb.insertNewLog(log);
-                    rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action);
+                    rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action, headOfHouseholdByAddressId, relationship);
                     String message = "Đơn của bạn đã được nộp thành công";
                     request.setAttribute("message", message);
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);

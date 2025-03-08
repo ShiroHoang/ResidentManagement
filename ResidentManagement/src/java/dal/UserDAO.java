@@ -190,5 +190,43 @@ public class UserDAO extends DBContext {
         }
     }
     
+    public String getFullNameByUserId(int userId){
+        String sql = """
+                     select Users.FullName 
+                     from Users join Registrations on Registrations.UserID = Users.UserID
+                     where Users.UserID = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                return rs.getString("FullName");
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+        return null;
+    }
+    
+    public String getNameByOnlyUserId(int userId){
+        String sql = """
+                     select Users.FullName 
+                     from Users 
+                     where Users.UserID = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                return rs.getString("FullName");
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "An error occured during getting the user account", ex);
+        }
+        return null;
+    }
+    
 
 }

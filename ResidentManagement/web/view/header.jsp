@@ -28,7 +28,7 @@
                         <li class="nav-item align-items-center">
                             <a class="nav-link fs-5" href="nav?action=citizenMain">Trang chủ</a>
                         </li>
-                         <c:if test = "${account.role eq 'Police'}">
+                        <c:if test = "${account.role eq 'Police'}">
                             <li class="nav-item align-items-center">
                                 <a class="nav-link fs-5" href="nav?action=accountList">Quản lí dân cư</a>
                             </li>
@@ -41,7 +41,7 @@
                                 Đơn gửi
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="nav?action=viewRequest">Xem đơn đã gửi</a></li>
+                                <li><a class="dropdown-item" href="registration">Xem đơn đã gửi</a></li>
                                 <li><a class="dropdown-item" href="nav?action=submitRequest">Gửi đơn mới</a></li>
                                     <%
                                         session = request.getSession();
