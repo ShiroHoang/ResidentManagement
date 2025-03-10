@@ -17,7 +17,7 @@
     <body>
         <nav class="navbar navbar-expand-lg custom-navbar"> 
             <div class="container">
-                <a class="navbar-brand col-lg-5" href="#">
+                <a class="navbar-brand col-lg-5" href="home.html">
                     <img src="images/logo/logo.png" width="100%"  alt="logo"/>
                 </a>
                 <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

@@ -34,9 +34,9 @@
                     <h1 class="opacity">LOGIN</h1>
                     <form id="form" action="login" method="post">
                         <input type="hidden" name="action" value="login">
-                        <input type="text" name="email" placeholder="EMAIL" />
-                        <input type="password" name="password" placeholder="MẬT KHẨU" />
-                        <button class="opacity" onclick="submitForm()" >ĐĂNG NHẬP</button>
+                        <input type="text" id="email" name="email" placeholder="EMAIL" />
+                        <input type="password" id="password" name="password" placeholder="MẬT KHẨU" />
+                        <button class="opacity" onclick="submitForm()" id="loginButton" >ĐĂNG NHẬP</button>
                     </form>
                     <h3 style="color:red">${requestScope.error}</h3>
                     <div class="opacity ">
