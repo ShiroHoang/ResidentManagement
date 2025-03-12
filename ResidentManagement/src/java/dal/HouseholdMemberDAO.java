@@ -95,20 +95,6 @@ public class HouseholdMemberDAO extends DBContext {
     }
 
 
-    public void newHouseholdMember(int houseHoldId, int userId, String relationship, String typeStay) {
-        String sql = "insert into HouseholdMembers(HouseholdID, UserID, Relationship, TypeStay) values(?,?,?,?)";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, houseHoldId);
-            stmt.setInt(2, userId);
-            stmt.setString(3, relationship);
-            stmt.setString(4, typeStay);
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
     public void deleteHouseholdMemberByUserId(int userId) {
         String sql = """
                      delete from HouseholdMembers where UserID = ?

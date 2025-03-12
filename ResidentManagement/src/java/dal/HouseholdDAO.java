@@ -141,24 +141,4 @@ public class HouseholdDAO extends DBContext {
         }
     }
 
-    public void newHousehold(int headOfHouseholdId, int addressId, String createdDate) {
-        String sql = "insert into Households(HeadOfHouseholdID, AddressID, CreatedDate) values(?,?,?)";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            if (headOfHouseholdId != -1) {
-                stmt.setInt(1, headOfHouseholdId);
-                stmt.setInt(2, addressId);
-                stmt.setString(3, createdDate);
-            } else {
-                stmt.setNull(1, Types.INTEGER);
-                stmt.setInt(2, addressId);
-                stmt.setString(3, createdDate);
-            }
-            stmt.executeUpdate();
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-    }
 }
