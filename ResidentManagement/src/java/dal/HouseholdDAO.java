@@ -6,6 +6,7 @@ package dal;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,22 @@ public class HouseholdDAO extends DBContext {
         return -1;
     }
 
+    public int getHouseholdID(int addressID, int headOfHouseholdId) {
+        String sql = "select * from Households where AddressID = ? and HeadOfHouseholdID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, addressID);
+            stmt.setInt(2, headOfHouseholdId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("HouseholdID");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+
     public int getHouseholdID(int addressID) {
         String sql = "select * from Households where AddressID = ?";
         try {
@@ -79,8 +96,8 @@ public class HouseholdDAO extends DBContext {
         }
         return -1;
     }
-    
-    public int getHeadOfHouseholeIdByAddressId(int addressId){
+
+    public int getHeadOfHouseholdIdByAddressId(int addressId) {
         String sql = """
                      select Households.HeadOfHouseholdID 
                      from Households where AddressID = ?
@@ -96,5 +113,26 @@ public class HouseholdDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
         return -1;
+    }
+
+    public void newHousehold(int headOfHouseholdId, int addressId, String createdDate) {
+        String sql = "insert into Households(HeadOfHouseholdID, AddressID, CreatedDate) values(?,?,?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            if (headOfHouseholdId != -1) {
+                stmt.setInt(1, headOfHouseholdId);
+                stmt.setInt(2, addressId);
+                stmt.setString(3, createdDate);
+            } else {
+                stmt.setNull(1, Types.INTEGER);
+                stmt.setInt(2, addressId);
+                stmt.setString(3, createdDate);
+            }
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 }

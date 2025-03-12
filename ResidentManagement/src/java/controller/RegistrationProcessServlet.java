@@ -121,7 +121,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                 AddressRegistry registerAddress = new AddressRegistry(province, city, district, ward, street, house);
                 int addressID = ardb.getAddressId(registerAddress);
                 int headOfHouseholdID = hmdb.existHeadOfHouseholdId(headOfHousehold);
-                int householdID = hdb.getHouseholdID(addressID);
+                int householdID = hdb.getHouseholdID(addressID, headOfHouseholdID );
                 if (hmdb.existTypeStayPermanentOfMember(user) && typeStay.equalsIgnoreCase("permanent")) {
                     request.setAttribute("message", "Bạn đã có thường trú, không thể đăng ký thường trú mới");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
@@ -180,7 +180,7 @@ public class RegistrationProcessServlet extends HttpServlet {
                     return;
                 }
 
-                int headOfHouseholdByAddressId = hdb.getHeadOfHouseholeIdByAddressId(movedAddressID);
+                int headOfHouseholdByAddressId = hdb.getHeadOfHouseholdIdByAddressId(movedAddressID);
                 if (headOfHouseholdByAddressId != -1 && headOfHouseholdFullName.isEmpty()) {
                     request.setAttribute("message", "Địa chỉ đăng ký đã có chủ hộ khẩu! Vui lòng nhập tên chủ hộ");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
