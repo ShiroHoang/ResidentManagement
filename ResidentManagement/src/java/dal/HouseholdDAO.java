@@ -66,7 +66,10 @@ public class HouseholdDAO extends DBContext {
         return -1;
     }
 
-    public int getHouseholdID(int addressID, int headOfHouseholdId) {
+ 
+
+ 
+    public int getHouseholdIDByAddressIdAndHeadOfHouseholdId(int addressID, int headOfHouseholdId) {
         String sql = "select * from Households where AddressID = ? and HeadOfHouseholdID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -81,6 +84,8 @@ public class HouseholdDAO extends DBContext {
         }
         return -1;
     }
+
+
 
     public int getHouseholdID(int addressID) {
         String sql = "select * from Households where AddressID = ?";
@@ -97,22 +102,43 @@ public class HouseholdDAO extends DBContext {
         return -1;
     }
 
-    public int getHeadOfHouseholdIdByAddressId(int addressId) {
+ 
+
+    public ArrayList<Integer> getHeadOfHouseholdIdByAddressId(int addressId) {
         String sql = """
-                     select Households.HeadOfHouseholdID 
-                     from Households where AddressID = ?
+                 SELECT Households.HeadOfHouseholdID 
+                 FROM Households WHERE AddressID = ?
+                 """;
+        ArrayList<Integer> headOfHouseholdIds = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, addressId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                headOfHouseholdIds.add(rs.getInt("HeadOfHouseholdID"));
+            }
+            return headOfHouseholdIds;
+        } catch (SQLException ex) {
+            System.out.println("SQL Error: " + ex.getMessage());
+        }
+        return null;
+    }
+
+    public void insertNewHousehold(Household household) {
+        String sql = """
+                     insert into Households(HeadOfHouseholdID, AddressID, CreatedDate) values(?, ?, ?)
                      """;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, addressId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                return rs.getInt("HeadOfHouseholdID");
-            }
+            stmt.setInt(1, household.getHeadOfHouseholdId());
+            stmt.setInt(2, household.getAddressId());
+            stmt.setString(3, household.getCreatedDate());
+
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        return -1;
     }
 
     public void newHousehold(int headOfHouseholdId, int addressId, String createdDate) {

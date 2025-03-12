@@ -113,13 +113,13 @@
             .formSubmit{
                 font-size: 1rem;
             }
-            a {
+            .baby {
                 color: #828d92;
                 font-size: 30px;
                 text-decoration: none;
                 font-weight: bold;
             }
-            a:hover {
+            .baby:hover {
                 color: darkgray;
             }
             .pagination a {
@@ -176,7 +176,7 @@
                             <c:set var="page" value="${requestScope.page}"/>
                         <div class="pagination">
                             <c:forEach begin="${1}" end="${requestScope.num}" var="i">
-                                <a href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
+                                <a class="baby" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
                             </c:forEach>
                         </div>
 <!--                        <div class="text-center fs-4" width="100px">
@@ -185,7 +185,7 @@
                         </tbody>
 
                     </table>
-                    <a href="RequestList?backTo=approveRequest">Quay lại</a>
+                    <a class="baby" href="RequestList?backTo=approveRequest">Quay lại</a>
                 </div>
                 <% } %>
 

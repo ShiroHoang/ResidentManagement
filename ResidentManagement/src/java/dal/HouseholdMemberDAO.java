@@ -94,6 +94,7 @@ public class HouseholdMemberDAO extends DBContext {
         return -1;
     }
 
+
     public void newHouseholdMember(int houseHoldId, int userId, String relationship, String typeStay) {
         String sql = "insert into HouseholdMembers(HouseholdID, UserID, Relationship, TypeStay) values(?,?,?,?)";
         try {
@@ -106,6 +107,36 @@ public class HouseholdMemberDAO extends DBContext {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
 
+    public void deleteHouseholdMemberByUserId(int userId) {
+        String sql = """
+                     delete from HouseholdMembers where UserID = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }
+
+    public void insertNewHouseholdMember(HouseholdMember householdMember){
+        String sql = """
+                     insert into HouseholdMembers(HouseholdID, UserID, Relationship, TypeStay) values(?, ?, ?, ?)
+                     """;
+         try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdMember.getHouseholdId());
+            stmt.setInt(2, householdMember.getUserId());
+            stmt.setString(3, householdMember.getRelationship());
+            stmt.setString(4, householdMember.getTypeStay());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

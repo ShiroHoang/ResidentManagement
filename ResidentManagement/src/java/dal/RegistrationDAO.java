@@ -273,5 +273,69 @@ public class RegistrationDAO extends DBContext {
         }
         return list;
     }
+    
+    public int getUserIdByRegistrationId(int registrationId){
+        String sql = "select UserID from Registrations where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("UserID");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return -1;
+    }
+    
+    public int changeStatusToApprovedByRegistrationId(int registrationId, int  approveBy){
+        String sql = "update Registrations set Status = 'Approved', ApprovedBy = ? where RegistrationID = ?";
+        int rs = -1;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, approveBy);
+            stmt.setInt(2, registrationId);
+            
+            rs = stmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return rs;
+    }
+    
+    public int changeStatusToRejectedByRegistrationId(int registrationId){
+        String sql = "update Registrations set Status = 'Rejected' where RegistrationID = ?";
+        int rs = -1;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            rs = stmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return rs;
+    }
+    
+    public String getRegistrationTypeByRegistrationId(int registrationId){
+        String sql = "select RegistrationType from Registrations where RegistrationID = ?";
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, registrationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                return rs.getString("RegistrationType");
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
 
 }
