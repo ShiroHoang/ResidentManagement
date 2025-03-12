@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import model.AddressRegistry;
 import model.HouseholdMember;
@@ -180,21 +181,19 @@ public class RegistrationProcessServlet extends HttpServlet {
                     return;
                 }
 
-                int headOfHouseholdByAddressId = hdb.getHeadOfHouseholeIdByAddressId(movedAddressID);
-                if (headOfHouseholdByAddressId != -1 && headOfHouseholdFullName.isEmpty()) {
+                ArrayList<Integer> headOfHouseholdByAddressIds = hdb.getHeadOfHouseholdIdByAddressId(movedAddressID);
+                if (headOfHouseholdByAddressIds.contains(hmdb.existHeadOfHouseholdId(headOfHouseholdFullName))
+                            && headOfHouseholdFullName.isEmpty()) {
                     request.setAttribute("message", "Địa chỉ đăng ký đã có chủ hộ khẩu! Vui lòng nhập tên chủ hộ");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
-                } else if (headOfHouseholdByAddressId != -1 && relationship.isEmpty()) {
+                } else if (headOfHouseholdByAddressIds.contains(hmdb.existHeadOfHouseholdId(headOfHouseholdFullName))
+                            && relationship.isEmpty()) {
                     request.setAttribute("message", "Địa chỉ đăng ký có chủ hộ khẩu! Vui lòng nhập quan hệ với chủ hộ");
-                    request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
-                } else if (headOfHouseholdByAddressId != -1
-                        && headOfHouseholdByAddressId != hmdb.existHeadOfHouseholdId(headOfHouseholdFullName)) {
-                    request.setAttribute("message", "Sai tên chủ hộ! Vui lòng nhập lại");
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
                 } else {
                     Log log = new Log(user.getUserId(), "Chuyển hộ khẩu", formattedDate);
                     logdb.insertNewLog(log);
-                    rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action, headOfHouseholdByAddressId, relationship);
+                    rdb.newRegistrationMovedAddress(user, typeStay, formattedDate, oldAddressID, movedAddressID, action, hmdb.existHeadOfHouseholdId(headOfHouseholdFullName), relationship);
                     String message = "Đơn của bạn đã được nộp thành công";
                     request.setAttribute("message", message);
                     request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
