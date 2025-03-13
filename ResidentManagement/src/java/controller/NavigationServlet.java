@@ -89,6 +89,8 @@ public class NavigationServlet extends HttpServlet {
             request.getRequestDispatcher("view/accountList.jsp").forward(request, response);
         } else if(action.equalsIgnoreCase("approveRequest")){
             request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("passwordReset")){
+             request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
         }
     } 
 

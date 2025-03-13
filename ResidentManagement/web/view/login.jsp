@@ -40,7 +40,7 @@
                     </form>
                     <h3 style="color:red">${requestScope.error}</h3>
                     <div class="opacity ">
-                        <a href="view/passwordReset.jsp">QUÊN MẬT KHẨU</a>
+                        <a href="nav?action=passwordReset">QUÊN MẬT KHẨU</a>
                     </div>
                 </div>
                 <div class="circle circle-two"></div>
