@@ -10,7 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quên Mật Khẩu</title>
         <link rel="icon" href="images/star.png" type="image/x-icon"/>
-        <link rel="stylesheet" type="text/css" href="../css/login.css">
+        <link rel="stylesheet" type="text/css" href="css/login.css">
         <script src="js/themes.js"></script>
         <style>
             .hero {
@@ -43,7 +43,7 @@
                     <h3 style="color:red">${requestScope.error}</h3>
                     <h3 style="color:green">${requestScope.success}</h3>
                     <div class="register-forget opacity">
-                        <a href="login.jsp">Quay lại</a>
+                        <a href="login">Quay lại</a>
                     </div>
                 </div>
                 <div class="circle circle-two"></div>
