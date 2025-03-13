@@ -22,6 +22,7 @@ public class Registration {
     private String headOfHouseholdName;
     private String requestType;
 
+    
     public int getHeadOfHouseholdID() {
         return headOfHouseholdID;
     }

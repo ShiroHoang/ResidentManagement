@@ -106,8 +106,9 @@ public class RequestProcessServlet extends HttpServlet {
                 int userId = rdb.getUserIdByRegistrationId(registrationId);
                 int householdId = hdb.getHouseholdIDByAddressIdAndHeadOfHouseholdId(newAddressId, headOfHouseholdId); // lấy id của hộ khẩu request
                 if (headOfHouseholdId == -1 && registration.getRegistrationType().equalsIgnoreCase("permanent")) {
+                    rdb.changeStatusToApprovedByRegistrationId(registrationId, user.getUserId());
                     //Nếu không có chủ hộ khẩu mà user đăng ký dưới đơn thường trú -> user trở thành chủ hộ khẩu ->     
-                    Household household = new Household(userId, newAddressId, formattedDate); 
+                    Household household = new Household(userId, newAddressId, formattedDate);
                     hdb.insertNewHousehold(household); //cho vào hộ khảu mới
                     HouseholdMember householdMember = new HouseholdMember(householdId, userId, "Chủ hộ",
                             rdb.getRegistrationTypeByRegistrationId(registrationId));
@@ -120,7 +121,7 @@ public class RequestProcessServlet extends HttpServlet {
 //                    logdb.insertNewLog(new Log(user.getUserId(), "Duyệt đăng ký hộ khẩu mới cho đơn số " + registration.getRegistrationId(), formattedDate));
                 } else {
                     //trong trường hợp có chủ hộ khẩu và đơn dăng ký đủ điều kiện           
-                    System.out.println("householdid la " + householdId);
+                    rdb.changeStatusToApprovedByRegistrationId(registrationId, user.getUserId());
                     HouseholdMember householdMember = new HouseholdMember(householdId, userId, rdb.getRelationshipByRegistrationId(registrationId),
                             rdb.getRegistrationTypeByRegistrationId(registrationId));
                     hmdb.insertNewHouseholdMember(householdMember);
@@ -137,7 +138,7 @@ public class RequestProcessServlet extends HttpServlet {
                 int headOfHouseholdId = rdb.getHeadOfHouseholdIdByRegistrationId(registrationId);
                 int newAddressId = rdb.getNewAddressIdByRegistrationId(registrationId);
                 hmdb.deleteHouseholdMemberByUserId(userId);
-                if (headOfHouseholdId == -1) { //không tìm thấy chủ hộ và thì phải có trạng thái đăng ký thường trú chứ ?
+                if (headOfHouseholdId == -1) { //không tìm thấy chủ hộ và thì phải có trạng thái đăng ký thường trú 
                     Household household = new Household(userId, newAddressId, formattedDate); //tạo chủ hộ mới
                     hdb.insertNewHousehold(household);
 
