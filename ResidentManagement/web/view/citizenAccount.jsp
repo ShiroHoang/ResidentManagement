@@ -13,12 +13,12 @@
         <title>User Account</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="icon" href="images/star.png" type="image/x-icon"/>
+        <link rel="stylesheet" href="css/main.css"/>
         <style>
             body {
                 font-family: 'Nunito', Arial;
                 font-size: 18px;
                 line-height: 1.3333;
-                color: #1E2F41;
                 height: 100%;
             }
             *{
@@ -26,9 +26,15 @@
                 padding:0;
                 box-sizing: border-box;
             }
-            body {
-                background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/trong-dong.jpg');
+            .hero {
+                height: 100vh;
+                background: linear-gradient(rgba(144, 7, 13), rgba(0, 0, 0, 0.5)),
+                    url('https://free.vector6.com/wp-content/uploads/2021/03/E269-vector-trong-dong.jpg');
                 background-size: cover;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
             }
             .account-card {
                 max-width: 500px;
@@ -43,32 +49,32 @@
     </head>
     <body>
         <jsp:include page="header.jsp"/>
-        <div class="container hero">
-            <div class="account-card p-4">
+        <div class="hero">
+            <div class="account-card p-6">
                 <c:set var="account" value="${sessionScope.account}"/>
                 <h2 class="text-center mb-4">Thông tin tài khoản</h2>
-                <div class="mb-3 fs-4">
+                <div class="mb-3 fs-6">
                     <label class="form-label"><strong>Họ và tên:</strong></label>
                     <p id="fullName">${account.fullName}</p>
                     <input type="text" id="editFullName" class="form-control" style="display: none;" />
                 </div>
-                <div class="mb-3 fs-4">
+                <div class="mb-3 fs-6">
                     <label class="form-label"><strong>Email:</strong></label>
                     <p id="email">${account.email}</p>
                     <input type="text" id="editEmail" class="form-control" style="display: none;" />
                 </div>
-                <div class="mb-3 fs-4">
+                <div class="mb-3 fs-6">
                     <label class="form-label"><strong>Số điện thoại:</strong></label>
                     <p id="phone">${account.phoneNumber}</p>
                     <input type="text" id="editPhone" class="form-control" style="display: none;" />
                 </div>
-                <div class="mb-3 fs-4">
+                <div class="mb-3 fs-6">
                     <label class="form-label"><strong>Địa chỉ:</strong></label>
                     <p id="address">${account.address}</p>
                 </div>
-                <div class="text-center fs-4">
-                    <button id="editBtn" class="btn btn-primary fs-4">Thay đổi thông tin</button>
-                    <button id="saveBtn" class="btn btn-primary fs-4" style="display:none">Save</button>
+                <div class="text-center fs-6">
+                    <button id="editBtn" class="btn btn-primary fs-5">Thay đổi thông tin</button>
+                    <button id="saveBtn" class="btn btn-primary fs-5" style="display:none">Save</button>
                 </div>
             </div>
         </div>

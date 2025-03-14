@@ -46,7 +46,7 @@
                                     <%
                                         session = request.getSession();
                                         User user = (User) session.getAttribute("account");
-                                        if (user.getRole().equalsIgnoreCase("police")) {
+                                        if (user.getRole().equalsIgnoreCase("police") || user.getRole().equalsIgnoreCase("AreaLeader")) {
                                     %>
                                 <li><a class="dropdown-item" href="nav?action=approveRequest">Duyệt đơn</a></li>
                                     <% }%>

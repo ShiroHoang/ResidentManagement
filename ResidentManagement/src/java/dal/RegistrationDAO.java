@@ -336,6 +336,19 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
+    
+    public void newCommentByRegistrationId(int registrationId, String comment){
+        String sql = "update Registrations set Comments = ? where RegistrationID = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, comment );
+            stmt.setInt(2, registrationId );
+            stmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
 
 }

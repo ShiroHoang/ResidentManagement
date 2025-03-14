@@ -24,11 +24,14 @@
                 justify-content: center;
                 text-align: center;
             }
+            .container{
+                max-width: 100%;
+            }
         </style>
     </head>
     <body>
         <section class="container hero">
-            <div class="login-container">
+            <div class="login-container" style="max-with:100%">
                 <div class="circle circle-one"></div>
                 <div class="form-container">
                     <h1 class="opacity">QUÊN MẬT KHẨU</h1>
