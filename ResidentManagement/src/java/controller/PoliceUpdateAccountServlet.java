@@ -81,20 +81,6 @@ public class PoliceUpdateAccountServlet extends HttpServlet {
             request.getRequestDispatcher("view/updateAccount.jsp").forward(request, response);
             return;
         }
-
-
-        String pagenumRaw = request.getParameter("pagenum");
-        if (pagenumRaw == null) {
-            //do nothing
-        } else {
-            int pagenum = Integer.parseInt(pagenumRaw);
-            ArrayList<User> users = udb.getAll();
-            ArrayList<User> list = udb.getUserByStartAndEnd(users, (pagenum - 1) * 6, pagenum * 6 - 1);
-            request.setAttribute("list", list);
-            int page = (users.size() % 6 == 0) ? users.size() / 6 : users.size() / 6 + 1; //Get number of page
-            request.setAttribute("page", page);
-            request.getRequestDispatcher("view/accountList.jsp").forward(request, response);
-        }
     }
 
     /**

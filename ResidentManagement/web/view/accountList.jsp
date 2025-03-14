@@ -29,13 +29,23 @@
                 height: 100vh;
                 background: linear-gradient(rgba(144, 7, 13), rgba(0, 0, 0, 0.5)), url('images/trong-dong.jpg');
                 background-size: cover;
-                color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 text-align: center;
                 flex-direction: column;
             }
+            
+            .form-container {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                width: 700px;
+                text-align: left;
+                font-size: 1.5rem;
+            }
+            
             .navbar-nav .nav-link:hover {
                 color: #ffcc00 !important;
                 transform: scale(1.1);
@@ -77,15 +87,23 @@
             .page {
                 text-align: center;
             }
-            
+
             table {
                 background-color: white;
                 border-radius: 10px;
                 color: black;
             }
-            
-            .page{
-                background: white;
+
+            .pagination a {
+                margin-right: 10px; /* Adds space between page numbers */
+                padding: 5px 10px;   /* Adds padding inside the links */
+                text-decoration: none; /* Removes underline */
+                border: 1px solid #ccc; /* Optional: Adds border */
+                border-radius: 5px; /* Optional: Rounded corners */
+                display: inline-block; /* Ensures spacing works */
+            }
+            .pagination a:hover {
+                background-color: #ddd; /* Optional: Hover effect */
             }
         </style>
     </head>
@@ -93,41 +111,43 @@
         <jsp:include page="header.jsp"/>
 
         <div class="hero">
-            <h1>Danh sách:</h1>
-            <c:if test="${list == null || list.isEmpty()}">
-                <h2>Không có dân</h2>
-            </c:if>
-            <c:if test="${list != null && !list.isEmpty()}">
-                <div>
-                    <table border="1">
-                        <thead>
-                            <tr>
-                                <th>Họ và tên</th>
-                                <th>Địa chỉ</th>
-                                <th>Số điện thoại</th>
-                                <th>Chức vụ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="user" items="${list}">
+            <div class="form-container">
+                <h1>Danh sách:</h1>
+                <c:if test="${list == null || list.isEmpty()}">
+                    <h2>Không có dân</h2>
+                </c:if>
+                <c:if test="${list != null && !list.isEmpty()}">
+                    <div>
+                        <table border="1">
+                            <thead>
                                 <tr>
-                                    <td><c:out value="${user.fullName}"></c:out></td>
-                                    <td><c:out value="${user.address}"></c:out></td>
-                                    <td><c:out value="${user.phoneNumber}"></c:out></td>
-                                    <td><c:out value="${user.role}"></c:out></td>                        
-                                        <td>
-                                            <input type = "button" value="Chỉnh sửa" onclick="location.href = 'PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
-                                        </td>
-                                    </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                                    <th>Họ và tên</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Chức vụ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="user" items="${list}">
+                                    <tr>
+                                        <td><c:out value="${user.fullName}"></c:out></td>
+                                        <td><c:out value="${user.address}"></c:out></td>
+                                        <td><c:out value="${user.phoneNumber}"></c:out></td>
+                                        <td><c:out value="${user.role}"></c:out></td>                        
+                                            <td>
+                                                <input type = "button" value="Chỉnh sửa" onclick="location.href = 'PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
+                                            </td>
+                                        </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+                <div class = "pagination">
+                    <c:forEach var="page" begin="${1}" end="${pagenum}">                    
+                        <a href="page?page=${page}&action=accountList">${page}</a>                  
+                    </c:forEach>
                 </div>
-            </c:if>
-            <div class = "page">
-                <c:forEach var="pagenum" begin="${1}" end="${page}">                    
-                    <a href="PoliceUpdateAccount?pagenum=${pagenum}">${pagenum}</a>                  
-                </c:forEach>
             </div>
         </div>
         <jsp:include page="footer.jsp"/>

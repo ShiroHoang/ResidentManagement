@@ -65,6 +65,7 @@ public class NavigationServlet extends HttpServlet {
         User user = (User) session.getAttribute("account");
         UserDAO udb = new UserDAO();
         RegistrationDAO rdb = new RegistrationDAO();
+        System.out.println(action);
         if(action.equalsIgnoreCase("passwordReset")){
             request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
         }
@@ -79,21 +80,11 @@ public class NavigationServlet extends HttpServlet {
         }else if(action.equalsIgnoreCase("citizenAccount")){
             request.getRequestDispatcher("view/citizenAccount.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("viewRequest")){
-            List<Registration> list = rdb.getRegistrationByUserId(user);
-            request.setAttribute("registrations", list);
-            request.setAttribute("rdb", rdb);
-            request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
-        }  else if (action.equalsIgnoreCase("accountList")) {
-            ArrayList<User> users = udb.getAll();
-            ArrayList<User> list = udb.getUserByStartAndEnd(users, 0, 6);
-            request.setAttribute("list", list);
-            int page = (users.size() % 6 == 0)? users.size() / 6 : users.size() / 6 + 1; //Get number of page
-            request.setAttribute("page", page);            
-            request.getRequestDispatcher("view/accountList.jsp").forward(request, response);
+            request.getRequestDispatcher("registration?page=1").forward(request, response);
+        }  else if (action.equalsIgnoreCase("accountList")) {                       
+            request.getRequestDispatcher("page?page=1&action=accountList").forward(request, response);
         } else if(action.equalsIgnoreCase("approveRequest")){
             request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
-        } else if(action.equalsIgnoreCase("passwordReset")){
-             request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
         }
     } 
 

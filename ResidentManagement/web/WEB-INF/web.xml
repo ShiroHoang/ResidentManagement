@@ -41,6 +41,8 @@
         <servlet-class>controller.RequestProcessServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>PaginationServlet</servlet-name>
+        <servlet-class>controller.PaginationServlet</servlet-class>
         <servlet-name>ResetPassServlet</servlet-name>
         <servlet-class>controller.ResetPassServlet</servlet-class>
     </servlet>
@@ -89,6 +91,8 @@
         <url-pattern>/RequestProcess</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>PaginationServlet</servlet-name>
+        <url-pattern>/page</url-pattern>
         <servlet-name>ResetPassServlet</servlet-name>
         <url-pattern>/ResetPass</url-pattern>
     </servlet-mapping>
