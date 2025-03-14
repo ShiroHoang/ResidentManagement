@@ -4,10 +4,8 @@
  */
 package controller;
 
-import dal.HouseholdDAO;
-import dal.HouseholdMemberDAO;
-import dal.LogDAO;
-import dal.RegistrationDAO;
+import dal.*;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,20 +15,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import model.Household;
+import model.HouseholdMember;
 import model.Log;
 import model.Registration;
 import model.User;
-import model.Registration;
-import dal.RegistrationDAO;
-import dal.HouseholdMemberDAO;
-import model.HouseholdMember;
-import dal.HouseholdDAO;
-import jakarta.servlet.RequestDispatcher;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import model.Log;
-import dal.LogDAO;
-import model.Household;
 
 /**
  *
@@ -76,25 +65,27 @@ public class RequestProcessServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        int registrationId = Integer.parseInt(request.getParameter("registrationId"));
         RegistrationDAO rdb = new RegistrationDAO();
+        UserDAO udb = new UserDAO();
         HouseholdDAO hdb = new HouseholdDAO();
-        HouseholdMemberDAO hmdb = new HouseholdMemberDAO();
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("account");
+        HouseholdMemberDAO hmdb = new HouseholdMemberDAO();
+        LogDAO logdb = new LogDAO();
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = today.format(formatter);
-        LogDAO logdb = new LogDAO();
+
         if (user == null) {
             response.sendRedirect("login");
         } else {
             String action = request.getParameter("action");
-            int registrationId = Integer.parseInt(request.getParameter("registrationId"));
             Registration registration = rdb.getRegistrationById(registrationId);
             String requestType = request.getParameter("requestType");
+            int userId = rdb.getUserIdByRegistrationId(registrationId);
             if (action.equalsIgnoreCase("deny")) {
                 rdb.changeStatusToRejectedByRegistrationId(registrationId);
-                int userId = rdb.getUserIdByRegistrationId(registrationId);
                 Log log = new Log(userId, "Từ chối đơn chuyển hộ khẩu", formattedDate);
                 logdb.insertNewLog(log);
                 request.setAttribute("requestType", rdb.getRequestTypeByRegistrationId(registrationId));
@@ -103,7 +94,6 @@ public class RequestProcessServlet extends HttpServlet {
             } else if (action.equalsIgnoreCase("approve") && requestType.equalsIgnoreCase("registerAddress")) {
                 int headOfHouseholdId = rdb.getHeadOfHouseholdIdByRegistrationId(registrationId);
                 int newAddressId = rdb.getNewAddressIdByRegistrationId(registrationId);
-                int userId = rdb.getUserIdByRegistrationId(registrationId);
                 int householdId = hdb.getHouseholdIDByAddressIdAndHeadOfHouseholdId(newAddressId, headOfHouseholdId); // lấy id của hộ khẩu request
                 if (headOfHouseholdId == -1 && registration.getRegistrationType().equalsIgnoreCase("permanent")) {
                     rdb.changeStatusToApprovedByRegistrationId(registrationId, user.getUserId());
@@ -132,9 +122,8 @@ public class RequestProcessServlet extends HttpServlet {
                 RequestDispatcher rs = request.getRequestDispatcher("RequestList");
                 rs.forward(request, response);
 
-            } else if (action.equalsIgnoreCase("accept") && requestType.equalsIgnoreCase("moveAddress")) {
+            } else if (action.equalsIgnoreCase("approve") && requestType.equalsIgnoreCase("moveAddress")) {
                 rdb.changeStatusToApprovedByRegistrationId(registrationId, user.getUserId());
-                int userId = rdb.getUserIdByRegistrationId(registrationId);
                 int headOfHouseholdId = rdb.getHeadOfHouseholdIdByRegistrationId(registrationId);
                 int newAddressId = rdb.getNewAddressIdByRegistrationId(registrationId);
                 hmdb.deleteHouseholdMemberByUserId(userId);
@@ -157,8 +146,26 @@ public class RequestProcessServlet extends HttpServlet {
                 request.setAttribute("requestType", rdb.getRequestTypeByRegistrationId(registrationId));
                 RequestDispatcher rs = request.getRequestDispatcher("RequestList");
                 rs.forward(request, response);
-            }
+            } else if (action.equalsIgnoreCase("approve") && requestType.equalsIgnoreCase("separateAddress")) {
+                //get permanent householdmem
+                HouseholdMember householdMember = hmdb.getPermanentHouseholdMemberbyUserId(userId);
+                //old household info
+                Household oldHousehold = hdb.getHouseholdById(householdMember.getHouseholdId());
 
+                hmdb.deletePermanentHouseholdMemberByID(userId);
+                hdb.insertHousehold(userId, oldHousehold.getAddressId(), formattedDate);
+
+                Household newHousehold = hdb.getHouseholdByHeadId(userId);
+                hmdb.insertHouseholdMember(newHousehold.getHouseholdId(), userId, "Chủ hộ", "permanent");
+                rdb.updateRegistrationStatus(registrationId, "Approved", ((User) session.getAttribute("account")).getUserId());
+                Log log = new Log(user.getUserId(), "Duyệt đơn tách hộ khẩu", formattedDate);
+                logdb.insertNewLog(log);
+                request.setAttribute("registration", registration);
+                request.setAttribute("message", "Duyệt đơn thành công");
+                RequestDispatcher rs = request.getRequestDispatcher("view/viewListDetail.jsp");
+                rs.forward(request, response);
+                return;
+            }
         }
     }
 

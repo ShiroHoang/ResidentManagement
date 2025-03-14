@@ -139,8 +139,8 @@ public class RegistrationDAO extends DBContext {
                     headOfHouseholdName = headOfHousehold.getFullName();
                 }
                 list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
-                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"),
-                        rs.getString("Comments"), rs.getString("Relationship"), headOfHouseholdName, rs.getString("RequestType")));
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"),
+                        rs.getString("Comments"), rs.getString("Relationship"), rs.getString("RequestType")));
             }
             return list;
         } catch (SQLException ex) {
@@ -176,7 +176,8 @@ public class RegistrationDAO extends DBContext {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
-                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"), rs.getString("Comments")));
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"),
+                        rs.getString("Comments"), rs.getString("Relationship"), rs.getString("RequestType")));
             }
             return list.get(0);
         } catch (SQLException ex) {
@@ -274,6 +275,19 @@ public class RegistrationDAO extends DBContext {
         return list;
     }
     
+    public void updateRegistrationStatus(int registrationId, String status, int approveBy) {
+        String sql = "update Registrations set Status = ? ,ApprovedBy = ? where RegistrationId = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, approveBy);
+            stmt.setInt(3, registrationId);
+            stmt.executeUpdate();            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return;
+    }
     public int getUserIdByRegistrationId(int registrationId){
         String sql = "select UserID from Registrations where RegistrationID = ?";
         try {

@@ -179,6 +179,7 @@
         <c:set var="request" value="${requestScope.registrations}"/>
         <div class="hero">
             <div class="form-container">
+                <form action="RequestList" method="get">
                     <%
                         UserDAO udb = new UserDAO();
                         RegistrationDAO rdb = new RegistrationDAO();
@@ -189,7 +190,6 @@
                         int newAddressId = rdb.getNewAddressIdByRegistrationId(registration.getRegistrationId());
                         int oldAddressId = rdb.getOldAddressIdByRegistrationId(registration.getRegistrationId());
                         int headOfHouseholdId = rdb.getHeadOfHouseholdIdByRegistrationId(registration.getRegistrationId());
-
                     %>
                     <table border="1px">
                         <tr>
@@ -256,7 +256,6 @@
 
                         </tr>
                     </table>
-
                     <% session.setAttribute("approveBy", user.getUserId());%>
                     <c:if test="${sessionScope.account.role == 'Police'}">
                         <table>
@@ -267,284 +266,284 @@
                             </tr>
                         </table>
                     </c:if>
-                    <c:if  test="${sessionScope.account.role == 'AreaLeader'}">
-                        <form action="RequestComment" method="get">
-                            <table>
-                                <tr>
-                                <input type="hidden" name="registrationId" value=<%= registration.getRegistrationId()%>>
-                                    <td>Nhận xét từ tổ trưởng: 
-                                        <input type="text" name="comment" 
-                                               <c:if test="${sessionScope.account.role != 'AreaLeader'}">
-                                                   readonly="true"
-                                               </c:if>
-                                               <c:if test="${sessionScope.account.role != 'AreaLeader'}">
-                                                   readonly="false"
-                                               </c:if>
-                                               >
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a class="backTo" href="RequestList?backTo=listApprove&requestType=<%= rdb.getRequestTypeByRegistrationId(registration.getRegistrationId())%>">Quay lại</a></td>
-                                    <td>
-                                        <input class="comment" type="submit" value="Nhận xét">
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                    </c:if>
+                </form>
+                <c:if  test="${sessionScope.account.role == 'AreaLeader'}">
+                    <form action="RequestComment" method="get">
+                        <table>
+                            <tr>
+                            <input type="hidden" name="registrationId" value=<%= registration.getRegistrationId()%>>
+                            <td>Nhận xét từ tổ trưởng: 
+                                <input type="text" name="comment" 
+                                       <c:if test="${sessionScope.account.role != 'AreaLeader'}">
+                                           readonly="true"
+                                       </c:if>
+                                       <c:if test="${sessionScope.account.role != 'AreaLeader'}">
+                                           readonly="false"
+                                       </c:if>
+                                       >
+                            </td>
+                            </tr>
+                            <tr>
+                                <td><a class="backTo" href="RequestList?backTo=listApprove&requestType=<%= rdb.getRequestTypeByRegistrationId(registration.getRegistrationId())%>">Quay lại</a></td>
+                                <td>
+                                    <input class="comment" type="submit" value="Nhận xét">
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </c:if>
+            </div>
+            <div class="text-center fs-4" width="100px">
+                ${requestScope.message}
             </div>
 
-        </div>
+            <jsp:include page="footer.jsp"/>
+            <script>
 
-        <jsp:include page="footer.jsp"/>
+                function toggleFields() {
+                    let requestType = document.getElementById("requestType").value;
+                    let typeStay = document.querySelector(".typeStay");
+                    let new_address = document.querySelector(".newAddress");
+                    let old_address = document.querySelector(".oldAddress");
+                    let moved_address = document.querySelector(".movedAddress");
+                    let permanentAddress = document.querySelector(".permanentAddress");
+                    let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
-
-        <script>
-
-            function toggleFields() {
-                let requestType = document.getElementById("requestType").value;
-                let typeStay = document.querySelector(".typeStay");
-                let new_address = document.querySelector(".newAddress");
-                let old_address = document.querySelector(".oldAddress");
-                let moved_address = document.querySelector(".movedAddress");
-                let permanentAddress = document.querySelector(".permanentAddress");
-                let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
-
-                // Hide all initiall
-                typeStay.classList.add("hidden");
-                new_address.classList.add("hidden");
-                old_address.classList.add("hidden");
-                moved_address.classList.add("hidden");
-                permanentAddress.classList.add("hidden");
-                permanentSeparateAddress.classList.add("hidden");
-                if (requestType === "registerAddress") {
-                    typeStay.classList.remove("hidden");
-                    new_address.classList.remove("hidden");
-                } else if (requestType === "moveAddress") {
-                    typeStay.classList.add("hidden");
-                    new_address.classList.add("hidden");
-                    old_address.classList.remove("hidden");
-                    moved_address.classList.remove("hidden");
-                    permanentAddress.classList.remove("hidden");
-                } else {
+                    // Hide all initiall
                     typeStay.classList.add("hidden");
                     new_address.classList.add("hidden");
                     old_address.classList.add("hidden");
                     moved_address.classList.add("hidden");
                     permanentAddress.classList.add("hidden");
-                    permanentSeparateAddress.classList.remove("hidden");
+                    permanentSeparateAddress.classList.add("hidden");
+                    if (requestType === "registerAddress") {
+                        typeStay.classList.remove("hidden");
+                        new_address.classList.remove("hidden");
+                    } else if (requestType === "moveAddress") {
+                        typeStay.classList.add("hidden");
+                        new_address.classList.add("hidden");
+                        old_address.classList.remove("hidden");
+                        moved_address.classList.remove("hidden");
+                        permanentAddress.classList.remove("hidden");
+                    } else {
+                        typeStay.classList.add("hidden");
+                        new_address.classList.add("hidden");
+                        old_address.classList.add("hidden");
+                        moved_address.classList.add("hidden");
+                        permanentAddress.classList.add("hidden");
+                        permanentSeparateAddress.classList.remove("hidden");
+                    }
                 }
-            }
 
-            document.addEventListener("DOMContentLoaded", function () {
-                toggleFields(); // Ensure the function runs when the page loads
-                document.getElementById("requestType").addEventListener("change", toggleFields);
-            });
-
-            function syncSelectToHidden(selectId, hiddenId) {
-                const selectElement = document.getElementById(selectId);
-                const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
-
-                function updateHidden() {
-                    hiddenInput.value = selectElement.value; // Properly updates hidden input
-                }
-
-                // Set initial value when the page loads
-                updateHidden();
-
-                // Add event listener to update on change
-                selectElement.addEventListener('change', updateHidden);
-            }
-
-            // Call function correctly after the DOM is loaded
-            document.addEventListener("DOMContentLoaded", function () {
-                syncSelectToHidden('requestType', 'action'); // This should now work
-            })
-
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Fetch initial data when page loads
-                fetchAddresses();
-
-                // Add event listeners for each dropdown
-                document.getElementById('province').addEventListener('change', filterCities);
-                document.getElementById('city').addEventListener('change', filterDistricts);
-                document.getElementById('district').addEventListener('change', filterWards);
-                document.getElementById('ward').addEventListener('change', filterStreets);
-                document.getElementById('street').addEventListener('change', filterHouses);
-            });
-
-            let allAddresses = []; // Store all address data globally
-
-            function fetchAddresses() {
-                fetch('address') // Replace with your actual servlet path
-                        .then(response => response.json())
-                        .then(data => {
-                            allAddresses = data;
-                            populateProvinces();
-                        })
-                        .catch(error => console.error('Error fetching addresses:', error));
-            }
-
-            function populateProvinces() {
-                const provinceSelect = document.getElementById('province');
-                // Get unique provinces
-                const provinces = [...new Set(allAddresses.map(item => item.province))];
-
-                provinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province;
-                    option.textContent = province;
-                    provinceSelect.appendChild(option);
+                document.addEventListener("DOMContentLoaded", function () {
+                    toggleFields(); // Ensure the function runs when the page loads
+                    document.getElementById("requestType").addEventListener("change", toggleFields);
                 });
-            }
 
-            function filterCities() {
-                const provinceSelect = document.getElementById('province');
-                const citySelect = document.getElementById('city');
-                const selectedProvince = provinceSelect.value;
+                function syncSelectToHidden(selectId, hiddenId) {
+                    const selectElement = document.getElementById(selectId);
+                    const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
 
-                // Clear previous options
-                citySelect.innerHTML = '<option value="">Thành phố</option>';
-                document.getElementById('district').innerHTML = '<option value="">Quận</option>';
-                document.getElementById('ward').innerHTML = '<option value="">Phường</option>';
-                document.getElementById('street').innerHTML = '<option value="">Đường</option>';
+                    function updateHidden() {
+                        hiddenInput.value = selectElement.value; // Properly updates hidden input
+                    }
 
-                if (selectedProvince) {
-                    const cities = [...new Set(allAddresses
-                                .filter(addr => addr.province === selectedProvince)
-                                .map(addr => addr.city))];
+                    // Set initial value when the page loads
+                    updateHidden();
 
-                    cities.forEach(city => {
+                    // Add event listener to update on change
+                    selectElement.addEventListener('change', updateHidden);
+                }
+
+                // Call function correctly after the DOM is loaded
+                document.addEventListener("DOMContentLoaded", function () {
+                    syncSelectToHidden('requestType', 'action'); // This should now work
+                })
+
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Fetch initial data when page loads
+                    fetchAddresses();
+
+                    // Add event listeners for each dropdown
+                    document.getElementById('province').addEventListener('change', filterCities);
+                    document.getElementById('city').addEventListener('change', filterDistricts);
+                    document.getElementById('district').addEventListener('change', filterWards);
+                    document.getElementById('ward').addEventListener('change', filterStreets);
+                    document.getElementById('street').addEventListener('change', filterHouses);
+                });
+
+                let allAddresses = []; // Store all address data globally
+
+                function fetchAddresses() {
+                    fetch('address') // Replace with your actual servlet path
+                            .then(response => response.json())
+                            .then(data => {
+                                allAddresses = data;
+                                populateProvinces();
+                            })
+                            .catch(error => console.error('Error fetching addresses:', error));
+                }
+
+                function populateProvinces() {
+                    const provinceSelect = document.getElementById('province');
+                    // Get unique provinces
+                    const provinces = [...new Set(allAddresses.map(item => item.province))];
+
+                    provinces.forEach(province => {
                         const option = document.createElement('option');
-                        option.value = city;
-                        option.textContent = city;
-                        citySelect.appendChild(option);
+                        option.value = province;
+                        option.textContent = province;
+                        provinceSelect.appendChild(option);
                     });
                 }
-            }
 
-            function filterDistricts() {
-                const provinceSelect = document.getElementById('province');
-                const citySelect = document.getElementById('city');
-                const districtSelect = document.getElementById('district');
-                const selectedProvince = provinceSelect.value;
-                const selectedCity = citySelect.value;
+                function filterCities() {
+                    const provinceSelect = document.getElementById('province');
+                    const citySelect = document.getElementById('city');
+                    const selectedProvince = provinceSelect.value;
 
-                // Clear previous options
-                districtSelect.innerHTML = '<option value="">Quận</option>';
-                document.getElementById('ward').innerHTML = '<option value="">Phường</option>';
-                document.getElementById('street').innerHTML = '<option value="">Đường</option>';
+                    // Clear previous options
+                    citySelect.innerHTML = '<option value="">Thành phố</option>';
+                    document.getElementById('district').innerHTML = '<option value="">Quận</option>';
+                    document.getElementById('ward').innerHTML = '<option value="">Phường</option>';
+                    document.getElementById('street').innerHTML = '<option value="">Đường</option>';
 
-                if (selectedCity) {
-                    const districts = [...new Set(allAddresses
-                                .filter(addr => addr.province === selectedProvince && addr.city === selectedCity)
-                                .map(addr => addr.district))];
+                    if (selectedProvince) {
+                        const cities = [...new Set(allAddresses
+                                    .filter(addr => addr.province === selectedProvince)
+                                    .map(addr => addr.city))];
 
-                    districts.forEach(district => {
-                        const option = document.createElement('option');
-                        option.value = district;
-                        option.textContent = district;
-                        districtSelect.appendChild(option);
-                    });
+                        cities.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city;
+                            option.textContent = city;
+                            citySelect.appendChild(option);
+                        });
+                    }
                 }
-            }
 
-            function filterWards() {
-                const provinceSelect = document.getElementById('province');
-                const citySelect = document.getElementById('city');
-                const districtSelect = document.getElementById('district');
-                const wardSelect = document.getElementById('ward');
-                const selectedProvince = provinceSelect.value;
-                const selectedCity = citySelect.value;
-                const selectedDistrict = districtSelect.value;
+                function filterDistricts() {
+                    const provinceSelect = document.getElementById('province');
+                    const citySelect = document.getElementById('city');
+                    const districtSelect = document.getElementById('district');
+                    const selectedProvince = provinceSelect.value;
+                    const selectedCity = citySelect.value;
 
-                // Clear previous options
-                wardSelect.innerHTML = '<option value="">Phường</option>';
-                document.getElementById('street').innerHTML = '<option value="">Đường</option>';
+                    // Clear previous options
+                    districtSelect.innerHTML = '<option value="">Quận</option>';
+                    document.getElementById('ward').innerHTML = '<option value="">Phường</option>';
+                    document.getElementById('street').innerHTML = '<option value="">Đường</option>';
 
-                if (selectedDistrict) {
-                    const wards = [...new Set(allAddresses
-                                .filter(addr => addr.province === selectedProvince &&
-                                            addr.city === selectedCity &&
-                                            addr.district === selectedDistrict)
-                                .map(addr => addr.ward))];
+                    if (selectedCity) {
+                        const districts = [...new Set(allAddresses
+                                    .filter(addr => addr.province === selectedProvince && addr.city === selectedCity)
+                                    .map(addr => addr.district))];
 
-                    wards.forEach(ward => {
-                        const option = document.createElement('option');
-                        option.value = ward;
-                        option.textContent = ward;
-                        wardSelect.appendChild(option);
-                    });
+                        districts.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district;
+                            option.textContent = district;
+                            districtSelect.appendChild(option);
+                        });
+                    }
                 }
-            }
 
-            function filterStreets() {
-                const provinceSelect = document.getElementById('province');
-                const citySelect = document.getElementById('city');
-                const districtSelect = document.getElementById('district');
-                const wardSelect = document.getElementById('ward');
-                const streetSelect = document.getElementById('street');
-                const selectedProvince = provinceSelect.value;
-                const selectedCity = citySelect.value;
-                const selectedDistrict = districtSelect.value;
-                const selectedWard = wardSelect.value;
+                function filterWards() {
+                    const provinceSelect = document.getElementById('province');
+                    const citySelect = document.getElementById('city');
+                    const districtSelect = document.getElementById('district');
+                    const wardSelect = document.getElementById('ward');
+                    const selectedProvince = provinceSelect.value;
+                    const selectedCity = citySelect.value;
+                    const selectedDistrict = districtSelect.value;
 
-                // Clear previous options
-                streetSelect.innerHTML = '<option value="">Đường</option>';
+                    // Clear previous options
+                    wardSelect.innerHTML = '<option value="">Phường</option>';
+                    document.getElementById('street').innerHTML = '<option value="">Đường</option>';
 
-                if (selectedWard) {
-                    const streets = [...new Set(allAddresses
-                                .filter(addr => addr.province === selectedProvince &&
-                                            addr.city === selectedCity &&
-                                            addr.district === selectedDistrict &&
-                                            addr.ward === selectedWard)
-                                .map(addr => addr.street))];
+                    if (selectedDistrict) {
+                        const wards = [...new Set(allAddresses
+                                    .filter(addr => addr.province === selectedProvince &&
+                                                addr.city === selectedCity &&
+                                                addr.district === selectedDistrict)
+                                    .map(addr => addr.ward))];
 
-                    streets.forEach(street => {
-                        const option = document.createElement('option');
-                        option.value = street;
-                        option.textContent = street;
-                        streetSelect.appendChild(option);
-                    });
+                        wards.forEach(ward => {
+                            const option = document.createElement('option');
+                            option.value = ward;
+                            option.textContent = ward;
+                            wardSelect.appendChild(option);
+                        });
+                    }
                 }
-            }
 
-            function filterHouses() {
-                const provinceSelect = document.getElementById('province');
-                const citySelect = document.getElementById('city');
-                const districtSelect = document.getElementById('district');
-                const wardSelect = document.getElementById('ward');
-                const streetSelect = document.getElementById('street');
-                const houseSelect = document.getElementById('house');
-                const selectedProvince = provinceSelect.value;
-                const selectedCity = citySelect.value;
-                const selectedDistrict = districtSelect.value;
-                const selectedWard = wardSelect.value;
-                const selectedStreet = streetSelect.value;
+                function filterStreets() {
+                    const provinceSelect = document.getElementById('province');
+                    const citySelect = document.getElementById('city');
+                    const districtSelect = document.getElementById('district');
+                    const wardSelect = document.getElementById('ward');
+                    const streetSelect = document.getElementById('street');
+                    const selectedProvince = provinceSelect.value;
+                    const selectedCity = citySelect.value;
+                    const selectedDistrict = districtSelect.value;
+                    const selectedWard = wardSelect.value;
 
-                // Clear previous options
-                houseSelect.innerHTML = '<option value="">Nhà</option>';
+                    // Clear previous options
+                    streetSelect.innerHTML = '<option value="">Đường</option>';
 
-                if (selectedStreet) {
-                    const houses = [...new Set(allAddresses
-                                .filter(addr => addr.province === selectedProvince &&
-                                            addr.city === selectedCity &&
-                                            addr.district === selectedDistrict &&
-                                            addr.ward === selectedWard && addr.street === selectedStreet)
-                                .map(addr => addr.house))];
+                    if (selectedWard) {
+                        const streets = [...new Set(allAddresses
+                                    .filter(addr => addr.province === selectedProvince &&
+                                                addr.city === selectedCity &&
+                                                addr.district === selectedDistrict &&
+                                                addr.ward === selectedWard)
+                                    .map(addr => addr.street))];
 
-                    houses.forEach(house => {
-                        const option = document.createElement('option');
-                        option.value = house;
-                        option.textContent = house;
-                        houseSelect.appendChild(option);
-                    });
+                        streets.forEach(street => {
+                            const option = document.createElement('option');
+                            option.value = street;
+                            option.textContent = street;
+                            streetSelect.appendChild(option);
+                        });
+                    }
                 }
-            }
 
-        </script>
+                function filterHouses() {
+                    const provinceSelect = document.getElementById('province');
+                    const citySelect = document.getElementById('city');
+                    const districtSelect = document.getElementById('district');
+                    const wardSelect = document.getElementById('ward');
+                    const streetSelect = document.getElementById('street');
+                    const houseSelect = document.getElementById('house');
+                    const selectedProvince = provinceSelect.value;
+                    const selectedCity = citySelect.value;
+                    const selectedDistrict = districtSelect.value;
+                    const selectedWard = wardSelect.value;
+                    const selectedStreet = streetSelect.value;
+
+                    // Clear previous options
+                    houseSelect.innerHTML = '<option value="">Nhà</option>';
+
+                    if (selectedStreet) {
+                        const houses = [...new Set(allAddresses
+                                    .filter(addr => addr.province === selectedProvince &&
+                                                addr.city === selectedCity &&
+                                                addr.district === selectedDistrict &&
+                                                addr.ward === selectedWard && addr.street === selectedStreet)
+                                    .map(addr => addr.house))];
+
+                        houses.forEach(house => {
+                            const option = document.createElement('option');
+                            option.value = house;
+                            option.textContent = house;
+                            houseSelect.appendChild(option);
+                        });
+                    }
+                }
+
+            </script>
     </body>
 </html>
 
