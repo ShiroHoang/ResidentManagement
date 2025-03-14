@@ -3,6 +3,8 @@
     Created on : Feb 28, 2025, 5:03:04 PM
     Author     : huyng
 --%>
+<%@page import="dal.RegistrationDAO"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -214,11 +216,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <c:set var="rdb" value="${requestScope.rdb}" />
                             <c:forEach var="registration" items="${registrations}">
                                 <tr class="name">
                                     <td class="data-row">
-                                        <c:if test="${registration.requestType == 'registerAddress'}">
-                                            <input class="data-row" type="text" name="requestType" readonly value="Đăng ký hộ khẩu">
+                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'registerAddress'}">
+                                            <input class="data-row" type="text" name="requestType" readonly value="Đăng ký hộ khẩu">${registration.registrationId}
                                         </c:if>
                                         <c:if test="${registration.requestType == 'moveAddress'}">
                                             <input class="data-row" type="text" name="requestType" readonly value="Chuyển hộ khẩu">

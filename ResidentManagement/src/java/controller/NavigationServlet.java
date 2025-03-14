@@ -79,9 +79,9 @@ public class NavigationServlet extends HttpServlet {
         }else if(action.equalsIgnoreCase("citizenAccount")){
             request.getRequestDispatcher("view/citizenAccount.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("viewRequest")){
-            System.out.println(user.getUserId());
             List<Registration> list = rdb.getRegistrationByUserId(user);
             request.setAttribute("registrations", list);
+            request.setAttribute("rdb", rdb);
             request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
         }  else if (action.equalsIgnoreCase("accountList")) {
             ArrayList<User> users = udb.getAll();

@@ -8,6 +8,7 @@ import dal.HouseholdDAO;
 import dal.HouseholdMemberDAO;
 import dal.LogDAO;
 import dal.RegistrationDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import model.Log;
 import model.Registration;
 import model.User;
 
@@ -77,11 +79,16 @@ public class RequestCommentServlet extends HttpServlet {
             response.sendRedirect("login");
         } else {
             int registrationId = Integer.parseInt(request.getParameter("registrationId"));
-            System.out.println(registrationId);
             Registration registration = rdb.getRegistrationById(registrationId);
-            String comment= "";
+            String comment = request.getParameter("comment");
             rdb.newCommentByRegistrationId(registrationId, comment);
-            
+            Log log = new Log(user.getUserId(), "Nhận xét đơn " + registration.getRegistrationId(), formattedDate);
+            logdb.insertNewLog(log);
+            request.setAttribute("requestType", rdb.getRequestTypeByRegistrationId(registrationId));
+            request.setAttribute("message", "Nhận xét thành công");
+            request.setAttribute("registration", registration);
+            RequestDispatcher rs = request.getRequestDispatcher("view/viewListDetail.jsp");
+            rs.forward(request, response);
         }
     }
 

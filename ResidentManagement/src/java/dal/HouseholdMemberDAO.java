@@ -180,4 +180,20 @@ public class HouseholdMemberDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
     }
+    
+        public void insertNewHouseholdMemberForNoneHouseholdId(HouseholdMember householdMember){
+        String sql = """
+                     insert into HouseholdMembers(UserID, Relationship, TypeStay) values(?, ?, ?, ?)
+                     """;
+         try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdMember.getUserId());
+            stmt.setString(2, householdMember.getRelationship());
+            stmt.setString(3, householdMember.getTypeStay());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

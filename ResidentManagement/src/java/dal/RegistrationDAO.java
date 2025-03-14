@@ -68,8 +68,8 @@ public class RegistrationDAO extends DBContext {
         }
     }
 
-    public void newRegistrationMovedAddress(User user, String registrationType, String startDate, int oldAddressID, int newAddressID
-                                                , String requestType, int headOfHouseholdID, String relationship) {
+    public void newRegistrationMovedAddress(User user, String registrationType, String startDate, int oldAddressID, int newAddressID,
+             String requestType, int headOfHouseholdID, String relationship) {
         String sql = "insert into Registrations(UserID, RegistrationType, StartDate, OldAddressID, NewAddressID, RequestType, HeadOfHouseholdID, Relationship) values(?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -148,7 +148,7 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
-    
+
     public List<Registration> getRequestTypeList(String requestType) {
         String sql = "select * from Registrations where RequestType = ? and Status = 'Pending'";
         try {
@@ -166,7 +166,7 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
-    
+
     public Registration getRegistrationById(int registrationId) {
         String sql = "select * from Registrations where RegistrationID = ?";
         try {
@@ -185,8 +185,8 @@ public class RegistrationDAO extends DBContext {
         }
         return null;
     }
-    
-    public String getRequestTypeByRegistrationId(int registrationId){
+
+    public String getRequestTypeByRegistrationId(int registrationId) {
         String sql = "select RequestType from Registrations where RegistrationID = ?";
         try {
             List<Registration> list = new ArrayList<>();
@@ -196,14 +196,14 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getString("RequestType");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
     }
-    
-    public int getNewAddressIdByRegistrationId(int registrationId){
+
+    public int getNewAddressIdByRegistrationId(int registrationId) {
         String sql = "select NewAddressID from Registrations where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -212,14 +212,14 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getInt("NewAddressID");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return -1;
     }
-    
-    public int getOldAddressIdByRegistrationId(int registrationId){
+
+    public int getOldAddressIdByRegistrationId(int registrationId) {
         String sql = "select OldAddressID from Registrations where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -228,14 +228,14 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getInt("OldAddressID");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return -1;
     }
-    
-    public int getHeadOfHouseholdIdByRegistrationId(int registrationId){
+
+    public int getHeadOfHouseholdIdByRegistrationId(int registrationId) {
         String sql = "select HeadOfHouseholdID from Registrations where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -244,14 +244,14 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getInt("HeadOfHouseholdID");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return -1;
     }
-    
-    public String getRelationshipByRegistrationId(int registrationId){
+
+    public String getRelationshipByRegistrationId(int registrationId) {
         String sql = "select Relationship from Registrations where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -260,35 +260,37 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getString("Relationship");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
     }
-    
+
     public List<Registration> getRequestListByPage(List<Registration> rlist, int start, int end) {
         List<Registration> list = new ArrayList<>();
-        for(int i=start; i<end; i++){
+        for (int i = start; i < end; i++) {
             list.add(rlist.get(i));
         }
         return list;
     }
-    
-    public void updateRegistrationStatus(int registrationId, String status, int approveBy) {
-        String sql = "update Registrations set Status = ? ,ApprovedBy = ? where RegistrationId = ?";
+
+    public void updateRegistrationStatus(int registrationId, String status, int approveBy, String endDate) {
+        String sql = "update Registrations set Status = ? ,ApprovedBy = ?, EndDate = ? where RegistrationId = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, status);
             stmt.setInt(2, approveBy);
-            stmt.setInt(3, registrationId);
-            stmt.executeUpdate();            
+            stmt.setString(3, endDate);
+            stmt.setInt(4, registrationId);
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return;
     }
-    public int getUserIdByRegistrationId(int registrationId){
+
+    public int getUserIdByRegistrationId(int registrationId) {
         String sql = "select UserID from Registrations where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -297,44 +299,46 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getInt("UserID");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return -1;
     }
-    
-    public int changeStatusToApprovedByRegistrationId(int registrationId, int  approveBy){
-        String sql = "update Registrations set Status = 'Approved', ApprovedBy = ? where RegistrationID = ?";
+
+    public int changeStatusToApprovedByRegistrationId(int registrationId, int approveBy, String endDate) {
+        String sql = "update Registrations set Status = 'Approved', ApprovedBy = ?, EndDate = ? where RegistrationID = ?";
         int rs = -1;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, approveBy);
-            stmt.setInt(2, registrationId);
-            
+            stmt.setString(2, endDate);
+            stmt.setInt(3, registrationId);
+
             rs = stmt.executeUpdate();
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return rs;
     }
-    
-    public int changeStatusToRejectedByRegistrationId(int registrationId){
-        String sql = "update Registrations set Status = 'Rejected' where RegistrationID = ?";
+
+    public int changeStatusToRejectedByRegistrationId(int registrationId, String endDate) {
+        String sql = "update Registrations set Status = 'Rejected', EndDate = ? where RegistrationID = ?";
         int rs = -1;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, registrationId);
+            stmt.setString(1, endDate);
+            stmt.setInt(2, registrationId);
             rs = stmt.executeUpdate();
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return rs;
     }
-    
-    public String getRegistrationTypeByRegistrationId(int registrationId){
+
+    public String getRegistrationTypeByRegistrationId(int registrationId) {
         String sql = "select RegistrationType from Registrations where RegistrationID = ?";
         try {
             List<Registration> list = new ArrayList<>();
@@ -344,25 +348,25 @@ public class RegistrationDAO extends DBContext {
             while (rs.next()) {
                 return rs.getString("RegistrationType");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
     }
-    
-    public void newCommentByRegistrationId(int registrationId, String comment){
+
+    public void newCommentByRegistrationId(int registrationId, String comment) {
         String sql = "update Registrations set Comments = ? where RegistrationID = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, comment );
-            stmt.setInt(2, registrationId );
+            stmt.setString(1, comment);
+            stmt.setInt(2, registrationId);
             stmt.executeUpdate();
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
-
+    
 
 }

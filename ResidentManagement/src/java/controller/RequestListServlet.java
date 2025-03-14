@@ -66,9 +66,14 @@ public class RequestListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
         RegistrationDAO rdb = new RegistrationDAO();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("account");
+        if(user == null){
+            response.sendRedirect("login");
+            return;
+        }
         //for view detail of list
         String action = request.getParameter("action");
         if (action != null && action.equals("view")) {
