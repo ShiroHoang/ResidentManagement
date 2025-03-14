@@ -175,7 +175,7 @@
                             <% } %>
                             <c:set var="page" value="${requestScope.page}"/>
                         <div class="pagination">
-                            <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                            <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
                                 <a class="baby" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
                             </c:forEach>
                         </div>

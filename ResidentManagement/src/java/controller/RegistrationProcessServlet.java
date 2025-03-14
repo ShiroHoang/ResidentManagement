@@ -75,10 +75,9 @@ public class RegistrationProcessServlet extends HttpServlet {
         if (user == null) {
             response.sendRedirect("login");
         } else {
-            RegistrationDAO rdb = new RegistrationDAO();
-            List<Registration> list = rdb.filterRegistrationByUserID(user);
-            request.setAttribute("registrations", list);
-            request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
+            String xpage = request.getParameter("page");
+            request.setAttribute("page", xpage);
+            request.getRequestDispatcher("page?action=viewRequest").forward(request, response);
         }
     }
 

@@ -151,22 +151,20 @@
                 }
             }
 
-            .pagination {
-                margin-top: 10px;
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .pagination button {
-                padding: 8px 12px;
-                border: none;
-                background-color: #007bff;
+            .pagination a {
+                margin-right: 10px; /* Adds space between page numbers */
+                padding: 5px 10px;   /* Adds padding inside the links */
+                text-decoration: none; /* Removes underline */
+                border: 1px solid #ccc; /* Optional: Adds border */
+                border-radius: 5px; /* Optional: Rounded corners */
+                display: inline-block; /* Ensures spacing works */
+                background-color: white;
                 color: black;
-                cursor: pointer;
-                border-radius: 5px;
             }
-
+            .pagination a:hover {
+                background-color: #ddd; /* Optional: Hover effect */
+            }
+            
             .pagination button:disabled {
                 background-color: #cccccc;
                 cursor: not-allowed;
@@ -182,7 +180,7 @@
             .table-header{
                 background: white;
             }
-            
+
             .card-header{
                 color: white;
             }
@@ -271,10 +269,11 @@
                         </tbody>
                     </table>
                 </form>
+                <c:set var="page" value="${requestScope.page}"/>
                 <div class="pagination">
-                    <button id="prevPage" disabled>Previous</button>
-                    <span id="pageNumber">1</span>
-                    <button id="nextPage">Next</button>
+                    <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
+                        <a href="registration?page=${i}">${i}</a>
+                    </c:forEach>
                 </div>
             </div>
         </div>

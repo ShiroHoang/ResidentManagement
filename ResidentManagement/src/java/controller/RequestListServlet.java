@@ -88,25 +88,10 @@ public class RequestListServlet extends HttpServlet {
             rs.forward(request, response);
         } else if ((backTo != null && backTo.equals("listApprove")) || requestType != null) {
             //calculate pagination
-            List<Registration> requestList = rdb.getRequestTypeList(requestType);
-            int page, numPerPage = 7;
-            int size = requestList.size();
-            int num = (size % numPerPage == 0 ? (size / numPerPage) : ((size / numPerPage) + 1));
             String xpage = request.getParameter("page");
-            if (xpage == null) {
-                page = 1;
-            } else {
-                page = Integer.parseInt(xpage);
-            }
-            int start, end;
-            start = (page - 1) * numPerPage;
-            end = Math.min(page * numPerPage, size);
-            List<Registration> requestListByPage = rdb.getRequestListByPage(requestList, start, end);
-
-            request.setAttribute("page", page);
-            request.setAttribute("num", num);
-            request.setAttribute("requestList", requestListByPage);
-            RequestDispatcher rs = request.getRequestDispatcher("view/viewListToBeApprove.jsp");
+            request.setAttribute("page", xpage);
+            request.setAttribute("requestType", requestType);            
+            RequestDispatcher rs = request.getRequestDispatcher("page?action=requestList");
             rs.forward(request, response);
         }
 
