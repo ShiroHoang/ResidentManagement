@@ -124,6 +124,8 @@ public class PaginationServlet extends HttpServlet {
             request.setAttribute("page", page);
             request.setAttribute("pagenum", pagenum);
             request.setAttribute("registrations", requestListByPage);
+            
+            request.setAttribute("rdb", rdb);
             RequestDispatcher rs = request.getRequestDispatcher("view/viewRequest.jsp");
             rs.forward(request, response);
         }

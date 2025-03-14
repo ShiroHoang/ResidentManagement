@@ -166,7 +166,7 @@
             .pagination a:hover {
                 background-color: #ddd; /* Optional: Hover effect */
             }
-            
+
             .pagination button:disabled {
                 background-color: #cccccc;
                 cursor: not-allowed;
@@ -186,6 +186,12 @@
             .card-header{
                 color: white;
             }
+            
+            td {
+                white-space: normal;
+                word-wrap: break-word;
+                
+            }
 
         </style>
     </head>
@@ -203,28 +209,28 @@
                     <table class="" id="dataTable">
                         <thead>
                             <tr>
-                                <th class="fs-4">Loại đơn</th>
-                                <th class="fs-4">Loại hộ khẩu</th>
-                                <th class="fs-4">Ngày tạo</th>
-                                <th class="fs-4">Chủ hộ khẩu</th>
-                                <th class="fs-4">Mối quan hệ với chủ hộ khẩu</th>
-                                <th class="fs-4">Ghi chú</th>
-                                <th class="fs-4">Trạng thái</th>
-                                <th class="fs-4">Ngày trả lời</th>
+                                <th class="fs-6">Loại đơn</th>
+                                <th class="fs-6">Loại hộ khẩu</th>
+                                <th class="fs-6">Ngày tạo</th>
+                                <th class="fs-6">Chủ hộ khẩu</th>
+                                <th class="fs-6">Mối quan hệ với chủ hộ khẩu</th>
+                                <th class="fs-6">Ghi chú</th>
+                                <th class="fs-6">Trạng thái</th>
+                                <th class="fs-6">Ngày trả lời</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:set var="rdb" value="${requestScope.rdb}" />
                             <c:forEach var="registration" items="${registrations}">
                                 <tr class="name">
-                                    <td class="data-row">
+                                    <td class="data-row col-2">
                                         <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'registerAddress'}">
-                                            <input class="data-row" type="text" name="requestType" readonly value="Đăng ký hộ khẩu">${registration.registrationId}
+                                            <input class="data-row" type="text" name="requestType" readonly value="Đăng ký hộ khẩu">
                                         </c:if>
-                                        <c:if test="${registration.requestType == 'moveAddress'}">
+                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'moveAddress'}">
                                             <input class="data-row" type="text" name="requestType" readonly value="Chuyển hộ khẩu">
                                         </c:if>
-                                        <c:if test="${registration.requestType == 'separateAddress'}">
+                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'separateAddress'}">
                                             <input class="data-row" type="text" name="requestType" readonly value="Tách hộ khẩu">
                                         </c:if>
                                     </td>
@@ -272,6 +278,7 @@
                         </tbody>
                     </table>
                 </form>
+                            <br/>
                 <c:set var="page" value="${requestScope.page}"/>
                 <div class="pagination">
                     <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
