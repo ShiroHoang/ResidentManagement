@@ -162,30 +162,30 @@
     <div class="hero">
         <div class="form-container">
             <form action="RequestList" method="get">
-                <% 
+                <%
                     UserDAO udb = new UserDAO();
                     RegistrationDAO rdb = new RegistrationDAO();
                     AddressRegistryDAO adb = new AddressRegistryDAO();
-                    Registration registration = (Registration)(request.getAttribute("registration"));
+                    Registration registration = (Registration) (request.getAttribute("registration"));
                     User user = (User) session.getAttribute("account");
-                    
+
                     int newAddressId = rdb.getNewAddressIdByRegistrationId(registration.getRegistrationId());
                     int oldAddressId = rdb.getOldAddressIdByRegistrationId(registration.getRegistrationId());
                     int headOfHouseholdId = rdb.getHeadOfHouseholdIdByRegistrationId(registration.getRegistrationId());
-                    
+
                 %>
                 <table border="1px">
                     <tr>
-                        <td>Mã đơn: <%= registration.getRegistrationId() %></td>
+                        <td>Mã đơn: <%= registration.getRegistrationId()%></td>
                     </tr>
                     <tr>
-                        <td>Người gửi đơn: <%= udb.getFullNameByUserId(registration.getUserId()) %></td>
+                        <td>Người gửi đơn: <%= udb.getFullNameByUserId(registration.getUserId())%></td>
                     </tr>
-                    <% if(registration.getRegistrationType().equals("permanent")) {%>
+                    <% if (registration.getRegistrationType().equals("permanent")) {%>
                     <tr>
                         <td>Loại hộ khẩu: Thường trú</td>
                     </tr>
-                    <% } else if(registration.getRegistrationType().equals("temporary")) {%>
+                    <% } else if (registration.getRegistrationType().equals("temporary")) {%>
                     <tr>
                         <td>Loại hộ khẩu: Tạm trú</td>
                     </tr>
@@ -197,43 +197,43 @@
                     <tr>
                         <td>Trạng thái: Đang chờ</td>
                     </tr>
-                    <% if(rdb.getRequestTypeByRegistrationId(registration.getRegistrationId()).equals("registerAddress")) { %>
+                    <% if (rdb.getRequestTypeByRegistrationId(registration.getRegistrationId()).equals("registerAddress")) {%>
                     <tr>
                         <td>Loại đơn gửi: Chuyển hộ khẩu</td>
                     </tr>
                     <tr>
-                        <td>Địa chỉ đăng ký: <%= adb.getAddressById(newAddressId) %></td>
+                        <td>Địa chỉ đăng ký: <%= adb.getAddressById(newAddressId)%></td>
                     </tr>
-                    <% } else if(rdb.getRequestTypeByRegistrationId(registration.getRegistrationId()).equals("separateAddress")){ %>
+                    <% } else if (rdb.getRequestTypeByRegistrationId(registration.getRegistrationId()).equals("separateAddress")) {%>
                     <tr>
                         <td>Loại đơn gửi: Tách hộ khẩu</td>
                     </tr>
                     <tr>
-                        <td>Địa chỉ tách hộ khẩu: <%= adb.getAddressById(newAddressId) %></td>
+                        <td>Địa chỉ tách hộ khẩu: <%= adb.getAddressById(newAddressId)%></td>
                     </tr>
                     <% } else {%>
                     <tr>
                         <td>Loại đơn gửi: Chuyển hộ khẩu</td>
                     </tr>
                     <tr>
-                        <td>Địa chỉ cũ: <%= adb.getAddressById(oldAddressId) %></td>
+                        <td>Địa chỉ cũ: <%= adb.getAddressById(oldAddressId)%></td>
                     </tr>
                     <tr>
-                        <td>Địa chỉ mới: <%= adb.getAddressById(newAddressId) %></td>
+                        <td>Địa chỉ mới: <%= adb.getAddressById(newAddressId)%></td>
                     </tr>
                     <% } %>
 
-                    <% if(rdb.getHeadOfHouseholdIdByRegistrationId(registration.getRegistrationId()) != -1 
-                        && rdb.getRelationshipByRegistrationId(registration.getRegistrationId()) != null) {%>
+                    <% if (rdb.getHeadOfHouseholdIdByRegistrationId(registration.getRegistrationId()) != -1
+                                && rdb.getRelationshipByRegistrationId(registration.getRegistrationId()) != null) {%>
                     <tr>
-                        <td>Chủ hộ khẩu: <%= udb.getNameByOnlyUserId(headOfHouseholdId) %></td>
+                        <td>Chủ hộ khẩu: <%= udb.getNameByOnlyUserId(headOfHouseholdId)%></td>
                     </tr>
                     <tr>
-                        <td>Quan hệ với chủ hộ: <%= rdb.getRelationshipByRegistrationId(registration.getRegistrationId()) %></td>
+                        <td>Quan hệ với chủ hộ: <%= rdb.getRelationshipByRegistrationId(registration.getRegistrationId())%></td>
                     </tr>
-                    <% } %>
+                    <% }%>
                     <tr>
-                        <td>Ngày gửi đơn: <%= registration.getStartDate() %></td>
+                        <td>Ngày gửi đơn: <%= registration.getStartDate()%></td>
                     </tr>
                 </table>
 
@@ -247,6 +247,10 @@
                     </tr>
                 </table>
             </form>
+
+            <div class="text-center fs-4" width="100px">
+                ${requestScope.message}
+            </div>
         </div>
 
     </div>

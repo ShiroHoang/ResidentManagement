@@ -6,9 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="model.Registration"%>
-
+<%@page import="java.util.ArrayList" %>
+<%@page import="model.Registration" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -126,7 +125,7 @@
                     </tr>
                 </table>
             </form>
-            
+
             <form action="RequestList" method="get">
                 <input type="hidden" name="requestType" value="separateAddress">
                 <table>
@@ -135,7 +134,7 @@
                     </tr>
                 </table>
             </form>
-            
+
             <form action="RequestList" method="get">
                 <input type="hidden" name="requestType" value="moveAddress">
                 <table>
@@ -152,66 +151,66 @@
     <jsp:include page="footer.jsp"/>
 
     <script>
-                    
-                    function toggleFields() {
-                        let requestType = document.getElementById("requestType").value;
-                        let typeStay = document.querySelector(".typeStay");
-                        let new_address = document.querySelector(".newAddress");
-                        let old_address = document.querySelector(".oldAddress");
-                        let moved_address = document.querySelector(".movedAddress");
-                        let permanentAddress = document.querySelector(".permanentAddress");
-                        let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
-                        // Hide all initiall
-                        typeStay.classList.add("hidden");
-                        new_address.classList.add("hidden");
-                        old_address.classList.add("hidden");
-                        moved_address.classList.add("hidden");
-                        permanentAddress.classList.add("hidden");
-                        permanentSeparateAddress.classList.add("hidden");
-                        if (requestType === "registerAddress") {
-                            typeStay.classList.remove("hidden");
-                            new_address.classList.remove("hidden");
-                        } else if (requestType === "moveAddress") {
-                            typeStay.classList.add("hidden");
-                            new_address.classList.add("hidden");
-                            old_address.classList.remove("hidden");
-                            moved_address.classList.remove("hidden");
-                            permanentAddress.classList.remove("hidden");
-                        } else {
-                            typeStay.classList.add("hidden");
-                            new_address.classList.add("hidden");
-                            old_address.classList.add("hidden");
-                            moved_address.classList.add("hidden");
-                            permanentAddress.classList.add("hidden");
-                            permanentSeparateAddress.classList.remove("hidden");
-                        }
-                    }
+        function toggleFields() {
+            let requestType = document.getElementById("requestType").value;
+            let typeStay = document.querySelector(".typeStay");
+            let new_address = document.querySelector(".newAddress");
+            let old_address = document.querySelector(".oldAddress");
+            let moved_address = document.querySelector(".movedAddress");
+            let permanentAddress = document.querySelector(".permanentAddress");
+            let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
-                    document.addEventListener("DOMContentLoaded", function () {
-                        toggleFields(); // Ensure the function runs when the page loads
-                        document.getElementById("requestType").addEventListener("change", toggleFields);
-                    });
+            // Hide all initiall
+            typeStay.classList.add("hidden");
+            new_address.classList.add("hidden");
+            old_address.classList.add("hidden");
+            moved_address.classList.add("hidden");
+            permanentAddress.classList.add("hidden");
+            permanentSeparateAddress.classList.add("hidden");
+            if (requestType === "registerAddress") {
+                typeStay.classList.remove("hidden");
+                new_address.classList.remove("hidden");
+            } else if (requestType === "moveAddress") {
+                typeStay.classList.add("hidden");
+                new_address.classList.add("hidden");
+                old_address.classList.remove("hidden");
+                moved_address.classList.remove("hidden");
+                permanentAddress.classList.remove("hidden");
+            } else {
+                typeStay.classList.add("hidden");
+                new_address.classList.add("hidden");
+                old_address.classList.add("hidden");
+                moved_address.classList.add("hidden");
+                permanentAddress.classList.add("hidden");
+                permanentSeparateAddress.classList.remove("hidden");
+            }
+        }
 
-                    function syncSelectToHidden(selectId, hiddenId) {
-                        const selectElement = document.getElementById(selectId);
-                        const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
+        document.addEventListener("DOMContentLoaded", function () {
+            toggleFields(); // Ensure the function runs when the page loads
+            document.getElementById("requestType").addEventListener("change", toggleFields);
+        });
 
-                        function updateHidden() {
-                            hiddenInput.value = selectElement.value; // Properly updates hidden input
-                        }
+        function syncSelectToHidden(selectId, hiddenId) {
+            const selectElement = document.getElementById(selectId);
+            const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
 
-                        // Set initial value when the page loads
-                        updateHidden();
+            function updateHidden() {
+                hiddenInput.value = selectElement.value; // Properly updates hidden input
+            }
 
-                        // Add event listener to update on change
-                        selectElement.addEventListener('change', updateHidden);
-                    }
+            // Set initial value when the page loads
+            updateHidden();
 
-                    // Call function correctly after the DOM is loaded
-                    document.addEventListener("DOMContentLoaded", function () {
-                        syncSelectToHidden('requestType', 'action'); // This should now work
-                    })
+            // Add event listener to update on change
+            selectElement.addEventListener('change', updateHidden);
+        }
+
+        // Call function correctly after the DOM is loaded
+        document.addEventListener("DOMContentLoaded", function () {
+            syncSelectToHidden('requestType', 'action'); // This should now work
+        });
 
     </script>
     <script>

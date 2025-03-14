@@ -1,9 +1,9 @@
+package model;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
-
 /**
  *
  * @author huyng
@@ -56,22 +56,19 @@ public class Registration {
     }
 
     public Registration(int registrationId, int userId, String registrationType, String startDate, String endDate,
-            String status, String comments, String relationship, String headOfHouseholdName, String requestType) {
+            String status,int approveById,String comments, String relationship, String requestType) {
         this.registrationId = registrationId;
         this.userId = userId;
         this.registrationType = registrationType;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.approveById = approveById;
         this.comments = comments;
         this.relationship = relationship;
         this.headOfHouseholdName = headOfHouseholdName;
         this.requestType = requestType;
     }
-
-   
-
-    
     
     public Registration(int registrationId, int userId, String registrationType, String startDate, String status) {
         this.registrationId = registrationId;
@@ -158,7 +155,7 @@ public class Registration {
 
     @Override
     public String toString() {
-        return "Registration{" + "registrationId=" + registrationId + ", userId=" + userId + ", registrationType=" + registrationType + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status + ", approveById=" + approveById + ", comments=" + comments + '}';
+        return "Registration{" + "registrationId=" + registrationId + ", userId=" + userId + ", registrationType=" + registrationType + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status + ", approveById=" + approveById + ", comments=" + comments + ", headOfHouseholdID=" + headOfHouseholdID + ", relationship=" + relationship + ", headOfHouseholdName=" + headOfHouseholdName + ", requestType=" + requestType + '}';
     }
-    
+
 }

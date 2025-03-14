@@ -35,6 +35,54 @@ public class HouseholdDAO extends DBContext {
         }
         return null;
     }
+    
+    
+    public Household getHouseholdById(int householdId) {
+        String sql = "select * from Households where HouseholdId = ?";
+        try {
+            List<Household> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Household(rs.getInt("HouseholdID"), rs.getInt("HeadOfHouseholdID"), rs.getInt("AddressId"), rs.getString("CreatedDate")));
+            }
+            return list.get(0);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public Household getHouseholdByHeadId(int headOfHouseholdId) {
+        String sql = "select * from Households where HeadOfHouseholdId = ?";
+        try {
+            List<Household> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, headOfHouseholdId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Household(rs.getInt("HouseholdID"), rs.getInt("HeadOfHouseholdID"), rs.getInt("AddressId"), rs.getString("CreatedDate")));
+            }
+            return list.get(0);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    public void insertHousehold(int headOfhouseholdId, int addressId, String createdDate) {
+        String sql = "insert into Households(HeadOfHouseholdID, AddressID, CreatedDate) values(?, ?, ?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);            
+            stmt.setInt(1, headOfhouseholdId);
+            stmt.setInt(2, addressId);
+            stmt.setString(3, createdDate);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     public int getHeadOfHouseHoldByHouseHoldId(int householdId) {
         String sql = "select * from Households where householdId = ?";
