@@ -4,7 +4,6 @@
     Author     : huyng
 --%>
 
-
 <%@page import="model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -34,7 +33,7 @@
                             </li>
                         </c:if>
                         <li class="nav-item align-items-center">
-                            <a class="nav-link fs-5" href="#">Thông báo</a>
+                            <a class="nav-link fs-5" href="nav?action=viewNews">Tin mới</a>
                         </li>
                         <li class="nav-item dropdown align-items-center">
                             <a class="nav-link dropdown-toggle fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

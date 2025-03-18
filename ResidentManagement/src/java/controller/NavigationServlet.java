@@ -85,7 +85,17 @@ public class NavigationServlet extends HttpServlet {
             request.getRequestDispatcher("page?page=1&action=accountList").forward(request, response);
         } else if(action.equalsIgnoreCase("approveRequest")){
             request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
-        }
+        } else if(action.equalsIgnoreCase("viewNews")){
+            request.getRequestDispatcher("view/news.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news1")){
+            request.getRequestDispatcher("view/news1.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news2")){
+            request.getRequestDispatcher("view/news2.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news3")){
+            request.getRequestDispatcher("view/news3.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news4")){
+            request.getRequestDispatcher("view/news4.jsp").forward(request, response);
+        } 
     } 
 
     /** 
