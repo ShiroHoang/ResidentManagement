@@ -96,6 +96,7 @@ public class AuthenticationFilter implements Filter {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
@@ -115,20 +116,24 @@ public class AuthenticationFilter implements Filter {
         String registerURI = req.getContextPath() + "/RegisterAccount";
         String passwordResetPath = req.getContextPath() + "/nav";
 
-   
-        
+        String requestURI = req.getRequestURI();
+        boolean isStaticResource = requestURI.endsWith(".jpg")
+                || requestURI.endsWith(".png")
+                || requestURI.endsWith(".gif")
+                || requestURI.endsWith(".css")
+                || requestURI.endsWith(".js");
         boolean loginRequest = req.getRequestURI().equalsIgnoreCase(loginURI);
         boolean homeRequest = req.getRequestURI().equalsIgnoreCase(homeURI);
         boolean registerRequest = req.getRequestURI().equalsIgnoreCase(registerURI);
-        boolean passwordReset = req.getRequestURI().equalsIgnoreCase(passwordResetPath) 
-    && "passwordReset".equals(req.getParameter("action"));
-        if (loggedIn || loginRequest || homeRequest || registerRequest || passwordReset ) {
+        boolean passwordReset = req.getRequestURI().equalsIgnoreCase(passwordResetPath)
+                && "passwordReset".equals(req.getParameter("action"));
+        if (loggedIn || loginRequest || homeRequest || registerRequest || passwordReset || isStaticResource ) {
             // If the user is logged in or the request is for the login page or public resources,
             // then continue processing the request.
             chain.doFilter(request, response);
         } else {
             // If the user is not authenticated, redirect them to the login page.
-            req.getRequestDispatcher("home.html").forward(request, response);
+            req.getRequestDispatcher("/home.html").forward(request, response);
         }
 
 //        Throwable problem = null;
