@@ -1,6 +1,6 @@
 
 ![Project Screenshot](ResidentManagement/web/images/about/header.jpg)
-[Link project: Resident Management](https://huynq.site/ResidentManagement)
+[Link website: Resident Management](https://huynq.site/ResidentManagement)
 # 🚀Resident Management System
 
 
