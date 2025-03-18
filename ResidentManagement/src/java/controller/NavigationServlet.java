@@ -65,12 +65,12 @@ public class NavigationServlet extends HttpServlet {
         User user = (User) session.getAttribute("account");
         UserDAO udb = new UserDAO();
         RegistrationDAO rdb = new RegistrationDAO();
-        System.out.println(action);
         if(action.equalsIgnoreCase("passwordReset")){
             request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
+            return;
         }
         if(user == null){
-            response.sendRedirect("login");
+            request.getRequestDispatcher("login").forward(request, response);
             return;
         }
         if(action.equalsIgnoreCase("citizenMain")){
