@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Submit Request</title>
+        <title>View Request</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="css/main.css"/>
@@ -97,8 +97,16 @@
                 }
 
                 .hero {
-                    height: auto; /* Adjust height */
+                    height: 80vh;
                     padding: 50px 20px;
+                }
+                
+                .container {
+                    min-width: 100vw;
+                }
+                
+                .col-2 {
+                    width: auto;
                 }
             }
 
@@ -151,6 +159,11 @@
                 th, td {
                     padding: 8px;
                 }
+                
+                .hidden-phone {
+                    display: none;
+                }
+                
             }
 
             .pagination a {
@@ -189,8 +202,7 @@
             
             td {
                 white-space: normal;
-                word-wrap: break-word;
-                
+                word-wrap: break-word; 
             }
 
         </style>
@@ -210,13 +222,13 @@
                         <thead>
                             <tr>
                                 <th class="fs-6">Loại đơn</th>
-                                <th class="fs-6">Loại hộ khẩu</th>
-                                <th class="fs-6">Ngày tạo</th>
-                                <th class="fs-6">Chủ hộ khẩu</th>
-                                <th class="fs-6">Mối quan hệ với chủ hộ khẩu</th>
-                                <th class="fs-6">Ghi chú</th>
+                                <th class="fs-6 hidden-phone">Loại hộ khẩu</th>
+                                <th class="fs-6 ">Ngày tạo</th>
+                                <th class="fs-6 hidden-phone">Chủ hộ khẩu</th>
+                                <th class="fs-6 hidden-phone">Mối quan hệ với chủ hộ khẩu</th>
+                                <th class="fs-6 hidden-phone">Ghi chú</th>
                                 <th class="fs-6">Trạng thái</th>
-                                <th class="fs-6">Ngày trả lời</th>
+                                <th class="fs-6 hidden-phone">Ngày trả lời</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -234,7 +246,7 @@
                                             <input class="data-row" type="text" name="requestType" readonly value="Tách hộ khẩu">
                                         </c:if>
                                     </td>
-                                    <td>
+                                    <td class="hidden-phone">
                                         <c:if test="${registration.registrationType == 'permanent'}">
                                             <input class="data-row" type="text" name="registrationType" readonly value="Thường trú">
                                         </c:if>
@@ -248,7 +260,7 @@
                                     <td>
                                         <input class="data-row" type="text" name="startDate" readonly value="${registration.startDate}">
                                     </td>
-                                    <td>
+                                    <td class="hidden-phone">
                                         <c:if test="${!registration.headOfHouseholdName.isEmpty()}">
                                             <input class="data-row" type="text" name="headOfHousehold" readonly value="${registration.headOfHouseholdName}">
                                         </c:if>
@@ -256,7 +268,7 @@
                                             <input class="data-row" type="text" name="headOfHousehold" readonly value="Không có">
                                         </c:if>
                                     </td>
-                                    <td>
+                                    <td class="hidden-phone">
                                         <c:if test="${registration.relationship != null}">
                                             <input class="data-row" type="text" name="relationship" readonly value="${registration.relationship}">
                                         </c:if>
@@ -264,13 +276,13 @@
                                             <input class="data-row" type="text" name="relationship" readonly value="Không có">
                                         </c:if>
                                     </td>
-                                    <td>
+                                    <td class="hidden-phone">
                                         <input class="data-row" type="text" name="comment" readonly value="${registration.comments}">
                                     </td>
                                     <td>
                                         <input class="data-row" type="text" name="status" readonly value="${registration.status}">
                                     </td>
-                                    <td>
+                                    <td class="hidden-phone">
                                         <input class="data-row" type="text" name="endDate" readonly value="${registration.endDate}">
                                     </td>
                                 </tr>

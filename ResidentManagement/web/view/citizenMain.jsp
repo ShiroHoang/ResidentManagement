@@ -62,7 +62,7 @@
                 }
 
                 .hero {
-                    height: auto; /* Adjust height */
+                    min-height: 100%;
                     padding: 50px 20px;
                 }
             }

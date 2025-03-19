@@ -78,7 +78,6 @@
             @media (max-width: 768px) {
                 .hero h1 {
                     font-size: 2rem;
-                    height: 300px;
                 }
 
                 .navbar-brand{
@@ -98,7 +97,7 @@
                 }
 
                 .hero {
-                    height: auto; /* Adjust height */
+                    height: 80vh;
                     padding: 50px 20px;
                 }
             }

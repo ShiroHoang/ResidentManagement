@@ -80,33 +80,7 @@
                 margin-top: 10px;
             }
 
-            @media (max-width: 768px) {
-                .hero h1 {
-                    font-size: 2rem;
-                    height: 300px;
-                }
-
-                .navbar-brand{
-                    width: 100%;
-                }
-
-                .navbar-brand img {
-                    width: 150px; /* Reduce logo size on mobile */
-                }
-
-                .navbar-nav {
-                    text-align: center; /* Center navigation items */
-                }
-
-                .navbar-nav .nav-item {
-                    margin-bottom: 10px; /* Space out items */
-                }
-
-                .hero {
-                    height: auto; /* Adjust height */
-                    padding: 50px 20px;
-                }
-            }
+            
 
             .btn:hover {
                 background-color: #0056b3;
@@ -134,7 +108,6 @@
                 padding: 8px 16px; /* Add spacing inside the border */
                 border-radius: 5px;
                 margin-top: 5px;
-                margin-left: 250px;
                 float:right;
             }
             .approve:hover{
@@ -172,6 +145,38 @@
                 color: #dd4b39;
             }
 
+            
+            @media (max-width: 768px) {
+                .hero h1 {
+                    font-size: 2rem;
+                    height: 300px;
+                }
+
+                .navbar-brand{
+                    width: 100%;
+                }
+
+                .navbar-brand img {
+                    width: 150px; /* Reduce logo size on mobile */
+                }
+
+                .navbar-nav {
+                    text-align: center; /* Center navigation items */
+                }
+
+                .navbar-nav .nav-item {
+                    margin-bottom: 10px; /* Space out items */
+                }
+
+                .hero {
+                    height: 95vh;
+                    padding: 50px 20px;
+                }
+                
+                .approve, .backTo, .reject {
+                    font-size: 18px;
+                }
+            }
         </style>
     </head>
     <body>

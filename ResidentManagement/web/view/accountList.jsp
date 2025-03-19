@@ -53,7 +53,6 @@
             @media (max-width: 768px) {
                 .hero h1 {
                     font-size: 2rem;
-                    height: 300px;
                 }
 
                 .navbar-brand{
@@ -69,9 +68,18 @@
                     margin-bottom: 10px; /* Space out items */
                 }
                 .hero {
-                    height: auto; /* Adjust height */
+                    min-height: 100%; /* Adjust height */
                     padding: 50px 20px;
                 }
+                
+                .hidden-phone {
+                    display: none;
+                }
+                
+                .phone-width {
+                    max-width: 100vw;
+                }
+                
             }
             table {
                 margin: auto;
@@ -111,31 +119,31 @@
         <jsp:include page="header.jsp"/>
 
         <div class="hero">
-            <div class="form-container">
+            <div class="form-container phone-width">
                 <h1>Danh sách:</h1>
                 <c:if test="${list == null || list.isEmpty()}">
                     <h2>Không có dân</h2>
                 </c:if>
                 <c:if test="${list != null && !list.isEmpty()}">
-                    <div>
+                    <div class="phone-width">
                         <table border="1">
                             <thead>
                                 <tr>
                                     <th>Họ và tên</th>
-                                    <th>Địa chỉ</th>
+                                    <th class="hidden-phone">Địa chỉ</th>
                                     <th>Số điện thoại</th>
-                                    <th>Chức vụ</th>
+                                    <th class="hidden-phone">Chức vụ</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach var="user" items="${list}">
                                     <tr>
                                         <td><c:out value="${user.fullName}"></c:out></td>
-                                        <td><c:out value="${user.address}"></c:out></td>
+                                        <td class="hidden-phone"><c:out value="${user.address}"></c:out></td>
                                         <td><c:out value="${user.phoneNumber}"></c:out></td>
-                                        <td><c:out value="${user.role}"></c:out></td>                        
+                                        <td class="hidden-phone"><c:out value="${user.role}"></c:out></td>                        
                                             <td>
-                                                <input type = "button" value="Chỉnh sửa" onclick="location.href = 'PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
+                                                <input type = "button" value="Sửa" onclick="location.href = 'PoliceUpdateAccount?action=update&userid=<c:out value="${user.userId}"></c:out>'" />
                                             </td>
                                         </tr>
                                 </c:forEach>

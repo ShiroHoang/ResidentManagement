@@ -54,6 +54,7 @@
             }
             table {
                 width: 100%;
+                margin-top: 15px;
             }
             td {
                 padding: 8px 0;
@@ -81,7 +82,6 @@
             @media (max-width: 768px) {
                 .hero h1 {
                     font-size: 2rem;
-                    height: 300px;
                 }
 
                 .navbar-brand{
@@ -101,9 +101,17 @@
                 }
 
                 .hero {
-                    height: auto; /* Adjust height */
+                    height: 80vh;
                     padding: 50px 20px;
                 }
+
+                td {
+                    padding: 8px;
+                }
+            }
+
+            table, th, td {
+                border: 1px solid;
             }
 
             .btn:hover {
@@ -141,53 +149,54 @@
         <div class="hero">
             <div class="form-container">
 
-                <% 
+                <%
                     UserDAO udb = new UserDAO();
                     RegistrationDAO rdb = new RegistrationDAO();
-                    List<Registration> requestList = (List<Registration>)(request.getAttribute("requestList"));
+                    List<Registration> requestList = (List<Registration>) (request.getAttribute("requestList"));
                     Registration registration1 = requestList.get(0);
-                    if(requestList == null){
+                    if (requestList == null) {
                 %>
                 <h2>Không còn đơn đề nghị!</h2>
                 <% } else { %>
                 <div>
                     <h1>Danh sách đơn: </h1> 
-                    <table border="1px">
+                    <table>
                         <thead>
                             <tr>
                                 <td>Mã đơn</td>
                                 <td>Tên người gửi</td>
                                 <td>Thời gian gửi</td>
+                                <td>Chi tiết</td>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <% for(Registration registration : requestList) { %>
+                            <% for (Registration registration : requestList) {%>
                             <tr>
-                                <td><%= registration.getRegistrationId() %></td>
-                                <td><%= udb.getFullNameByUserId(registration.getUserId()) %></td>
-                                <td><%= registration.getStartDate() %></td>
+                                <td><%= registration.getRegistrationId()%></td>
+                                <td><%= udb.getFullNameByUserId(registration.getUserId())%></td>
+                                <td><%= registration.getStartDate()%></td>
                                 <td>
                                     <input type="button" value="View"
-                                           onclick="location.href = 'RequestList?action=view&RegistrationId=<%= registration.getRegistrationId() %>'">
+                                           onclick="location.href = 'RequestList?action=view&RegistrationId=<%= registration.getRegistrationId()%>'">
                                 </td>
                             </tr>
-                            <% } %>
+                            <% }%>
                             <c:set var="page" value="${requestScope.page}"/>
                         <div class="pagination">
                             <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
                                 <a class="baby" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
                             </c:forEach>
                         </div>
-<!--                        <div class="text-center fs-4" width="100px">
-                            ${requestScope.message}
-                        </div> -->
+                        <!--                        <div class="text-center fs-4" width="100px">
+                        ${requestScope.message}
+                    </div> -->
                         </tbody>
 
                     </table>
                     <a class="baby" href="RequestList?backTo=approveRequest">Quay lại</a>
                 </div>
-                <% } %>
+                <% }%>
 
             </div>
 
@@ -195,68 +204,68 @@
 
         <jsp:include page="footer.jsp"/>
 
-        
+
         <script>
 
-                                               function toggleFields() {
-                                                   let requestType = document.getElementById("requestType").value;
-                                                   let typeStay = document.querySelector(".typeStay");
-                                                   let new_address = document.querySelector(".newAddress");
-                                                   let old_address = document.querySelector(".oldAddress");
-                                                   let moved_address = document.querySelector(".movedAddress");
-                                                   let permanentAddress = document.querySelector(".permanentAddress");
-                                                   let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
+            function toggleFields() {
+                let requestType = document.getElementById("requestType").value;
+                let typeStay = document.querySelector(".typeStay");
+                let new_address = document.querySelector(".newAddress");
+                let old_address = document.querySelector(".oldAddress");
+                let moved_address = document.querySelector(".movedAddress");
+                let permanentAddress = document.querySelector(".permanentAddress");
+                let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
-                                                   // Hide all initiall
-                                                   typeStay.classList.add("hidden");
-                                                   new_address.classList.add("hidden");
-                                                   old_address.classList.add("hidden");
-                                                   moved_address.classList.add("hidden");
-                                                   permanentAddress.classList.add("hidden");
-                                                   permanentSeparateAddress.classList.add("hidden");
-                                                   if (requestType === "registerAddress") {
-                                                       typeStay.classList.remove("hidden");
-                                                       new_address.classList.remove("hidden");
-                                                   } else if (requestType === "moveAddress") {
-                                                       typeStay.classList.add("hidden");
-                                                       new_address.classList.add("hidden");
-                                                       old_address.classList.remove("hidden");
-                                                       moved_address.classList.remove("hidden");
-                                                       permanentAddress.classList.remove("hidden");
-                                                   } else {
-                                                       typeStay.classList.add("hidden");
-                                                       new_address.classList.add("hidden");
-                                                       old_address.classList.add("hidden");
-                                                       moved_address.classList.add("hidden");
-                                                       permanentAddress.classList.add("hidden");
-                                                       permanentSeparateAddress.classList.remove("hidden");
-                                                   }
-                                               }
+                // Hide all initiall
+                typeStay.classList.add("hidden");
+                new_address.classList.add("hidden");
+                old_address.classList.add("hidden");
+                moved_address.classList.add("hidden");
+                permanentAddress.classList.add("hidden");
+                permanentSeparateAddress.classList.add("hidden");
+                if (requestType === "registerAddress") {
+                    typeStay.classList.remove("hidden");
+                    new_address.classList.remove("hidden");
+                } else if (requestType === "moveAddress") {
+                    typeStay.classList.add("hidden");
+                    new_address.classList.add("hidden");
+                    old_address.classList.remove("hidden");
+                    moved_address.classList.remove("hidden");
+                    permanentAddress.classList.remove("hidden");
+                } else {
+                    typeStay.classList.add("hidden");
+                    new_address.classList.add("hidden");
+                    old_address.classList.add("hidden");
+                    moved_address.classList.add("hidden");
+                    permanentAddress.classList.add("hidden");
+                    permanentSeparateAddress.classList.remove("hidden");
+                }
+            }
 
-                                               document.addEventListener("DOMContentLoaded", function () {
-                                                   toggleFields(); // Ensure the function runs when the page loads
-                                                   document.getElementById("requestType").addEventListener("change", toggleFields);
-                                               });
+            document.addEventListener("DOMContentLoaded", function () {
+                toggleFields(); // Ensure the function runs when the page loads
+                document.getElementById("requestType").addEventListener("change", toggleFields);
+            });
 
-                                               function syncSelectToHidden(selectId, hiddenId) {
-                                                   const selectElement = document.getElementById(selectId);
-                                                   const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
+            function syncSelectToHidden(selectId, hiddenId) {
+                const selectElement = document.getElementById(selectId);
+                const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
 
-                                                   function updateHidden() {
-                                                       hiddenInput.value = selectElement.value; // Properly updates hidden input
-                                                   }
+                function updateHidden() {
+                    hiddenInput.value = selectElement.value; // Properly updates hidden input
+                }
 
-                                                   // Set initial value when the page loads
-                                                   updateHidden();
+                // Set initial value when the page loads
+                updateHidden();
 
-                                                   // Add event listener to update on change
-                                                   selectElement.addEventListener('change', updateHidden);
-                                               }
+                // Add event listener to update on change
+                selectElement.addEventListener('change', updateHidden);
+            }
 
-                                               // Call function correctly after the DOM is loaded
-                                               document.addEventListener("DOMContentLoaded", function () {
-                                                   syncSelectToHidden('requestType', 'action'); // This should now work
-                                               })
+            // Call function correctly after the DOM is loaded
+            document.addEventListener("DOMContentLoaded", function () {
+                syncSelectToHidden('requestType', 'action'); // This should now work
+            })
 
         </script>
         <script>

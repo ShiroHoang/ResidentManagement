@@ -62,7 +62,7 @@
                 display: none;
             }
             .btn {
-                width: 20%;
+                width: 30%;
                 padding: 10px;
                 border: none;
                 background-color: #007bff;

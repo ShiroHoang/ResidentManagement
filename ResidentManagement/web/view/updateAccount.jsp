@@ -57,7 +57,7 @@
                     margin-bottom: 10px; /* Space out items */
                 }
                 .hero {
-                    height: auto; /* Adjust height */
+                    min-height: 100%;
                     padding: 50px 20px;
                 }
             }
