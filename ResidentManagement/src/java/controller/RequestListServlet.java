@@ -93,7 +93,9 @@ public class RequestListServlet extends HttpServlet {
             rs.forward(request, response);
         } else if ((backTo != null && backTo.equals("listApprove")) || requestType != null) {
             //calculate pagination
+            String residentName = request.getParameter("residentName");
             String xpage = request.getParameter("page");
+            request.setAttribute("residentName", residentName);
             request.setAttribute("page", xpage);
             request.setAttribute("requestType", requestType);            
             RequestDispatcher rs = request.getRequestDispatcher("page?action=requestList");

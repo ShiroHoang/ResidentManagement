@@ -69,7 +69,7 @@ public class RegistrationDAO extends DBContext {
     }
 
     public void newRegistrationMovedAddress(User user, String registrationType, String startDate, int oldAddressID, int newAddressID,
-             String requestType, int headOfHouseholdID, String relationship) {
+            String requestType, int headOfHouseholdID, String relationship) {
         String sql = "insert into Registrations(UserID, RegistrationType, StartDate, OldAddressID, NewAddressID, RequestType, HeadOfHouseholdID, Relationship) values(?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -367,6 +367,27 @@ public class RegistrationDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
     }
-    
+
+    public List<Registration> getRequestListByNameOfResidentAndRequestType(String requestType, String residentName) {
+        String sql = """
+                     select * from Registrations r
+                     left join Users u on r.UserID = u.UserID
+                     where r.RequestType = ? and r.Status = 'Pending' and u.FullName like 
+                     """ + "N'%"+residentName + "%'";
+        try {
+            List<Registration> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, requestType);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Registration(rs.getInt("RegistrationID"), rs.getInt("UserID"), rs.getString("RegistrationType"),
+                        rs.getString("StartDate"), rs.getString("EndDate"), rs.getString("Status"), rs.getInt("ApprovedBy"), rs.getString("Comments")));
+            }
+            return list;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
 
 }

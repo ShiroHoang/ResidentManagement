@@ -44,6 +44,8 @@
                 transform: scale(1.1);
             }
             .form-container {
+                margin-top: 350px;
+                margin-bottom: 300px;
                 background: white;
                 padding: 20px;
                 border-radius: 8px;
@@ -69,8 +71,9 @@
                 display: none;
             }
             .btn {
-                width: 20%;
+                width: 10%;
                 padding: 10px;
+                margin-bottom: 4px;
                 border: none;
                 background-color: #007bff;
                 color: white;
@@ -103,6 +106,7 @@
                 .hero {
                     height: 80vh;
                     padding: 50px 20px;
+                    margin-bottom: 50px;
                 }
 
                 td {
@@ -141,51 +145,67 @@
             .pagination a:hover {
                 background-color: #ddd; /* Optional: Hover effect */
             }
+
+            .formSubmit table {
+                border:none;
+            }
+
         </style>
     </head>
     <body>
         <jsp:include page="header.jsp"/>
         <c:set var="request" value="${requestScope.registrations}"/>
+        <c:set var="requestType" value="${requestScope.requestType}" />
         <div class="hero">
             <div class="form-container">
-
                 <%
                     UserDAO udb = new UserDAO();
                     RegistrationDAO rdb = new RegistrationDAO();
                     List<Registration> requestList = (List<Registration>) (request.getAttribute("requestList"));
-                    Registration registration1 = requestList.get(0);
                     if (requestList == null) {
                 %>
                 <h2>Không còn đơn đề nghị!</h2>
-                <% } else { %>
+                <% } else {
+                    Registration registration1 = requestList.get(0);%>
                 <div>
-                    <h1>Danh sách đơn: </h1> 
+                    <h3>Danh sách đơn: </h3> 
+                    <form action="RequestList" class="formSubmit">
+                        <input type="hidden" name="requestType" value="${requestType}">
+                        <table class="search" style="border:0">
+                            <tr>
+                                <td style="border:none; width:30%" > Tra theo tên người gửi:</td>
+                                <td style="border:none"><input type="text" name="residentName"></td>
+
+                            </tr>
+                        </table>
+                        <input class="btn btn-default" type="submit" value="Tra cứu" />
+                    </form>
                     <table>
                         <thead>
                             <tr>
-                                <td>Mã đơn</td>
-                                <td>Tên người gửi</td>
-                                <td>Thời gian gửi</td>
-                                <td>Chi tiết</td>
+                                <td class="fs-5">Mã đơn</td>
+                                <td class="fs-5">Tên người gửi</td>
+                                <td class="fs-5">Thời gian gửi</td>
+                                <td class="fs-5">Chi tiết</td>
                             </tr>
                         </thead>
                         <tbody>
 
                             <% for (Registration registration : requestList) {%>
                             <tr>
-                                <td><%= registration.getRegistrationId()%></td>
-                                <td><%= udb.getFullNameByUserId(registration.getUserId())%></td>
-                                <td><%= registration.getStartDate()%></td>
-                                <td>
-                                    <input type="button" value="View"
+                                <td class="fs-6"><%= registration.getRegistrationId()%></td>
+                                <td class="fs-6"><%= udb.getFullNameByUserId(registration.getUserId())%></td>
+                                <td class="fs-6"><%= registration.getStartDate()%></td>
+                                <td class="fs-6">
+                                    <input type="button" value="Xem"
                                            onclick="location.href = 'RequestList?action=view&RegistrationId=<%= registration.getRegistrationId()%>'">
                                 </td>
                             </tr>
                             <% }%>
                             <c:set var="page" value="${requestScope.page}"/>
-                        <div class="pagination">
+                        <div class="pagination fs-6" >
                             <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
-                                <a class="baby" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
+                                <a class="baby fs-6" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
                             </c:forEach>
                         </div>
                         <!--                        <div class="text-center fs-4" width="100px">

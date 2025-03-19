@@ -89,8 +89,23 @@ public class PaginationServlet extends HttpServlet {
         } else if (action.equals("requestList")) {
             //calculate pagination
             String requestType = request.getParameter("requestType");
-            List<Registration> requestList = rdb.getRequestTypeList(requestType);
+            String residentName = request.getParameter("residentName");
+            System.out.println(residentName);
+            System.out.println(requestType);
+            List<Registration> requestList;
+            /// if does not have name of resident
+            if(residentName == null){
+                requestList = rdb.getRequestTypeList(requestType);
+            }else{
+                requestList = rdb.getRequestListByNameOfResidentAndRequestType(requestType, residentName );
+            }
             int size = requestList.size();
+            if(size == 0){
+                requestList = null;
+                request.setAttribute("requestList", requestList);
+                request.getRequestDispatcher("view/viewListToBeApprove.jsp").forward(request, response);
+                return;
+            }
             int pagenum = (size % numPerPage == 0 ? (size / numPerPage) : ((size / numPerPage) + 1));
             if (xpage == null) {
                 page = 1;
@@ -101,7 +116,7 @@ public class PaginationServlet extends HttpServlet {
             start = (page - 1) * numPerPage;
             end = Math.min(page * numPerPage, size);
             List<Registration> requestListByPage = rdb.getRequestListByPage(requestList, start, end);
-
+            request.setAttribute("requestType", requestType);
             request.setAttribute("page", page);
             request.setAttribute("pagenum", pagenum);
             request.setAttribute("requestList", requestListByPage);
