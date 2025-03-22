@@ -35,7 +35,62 @@ public class HouseholdMemberDAO extends DBContext {
         }
         return null;
     }
+    
+    public List<HouseholdMember> getHouseholdMemberByUserId(int userId) {
+        String sql = "select * from HouseholdMembers where UserId = ?";
+        try {
+            List<HouseholdMember> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new HouseholdMember(rs.getInt("MemberId"), rs.getInt("HouseholdID"), rs.getInt("UserId"), rs.getString("Relationship"), rs.getString("TypeStay")));
+            }
+            return list;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    
+    public HouseholdMember getPermanentHouseholdMemberbyUserId(int userid) {
+        List<HouseholdMember> list = this.getHouseholdMemberByUserId(userid);
+        for (HouseholdMember householdMember : list) {
+            if (householdMember.getTypeStay().equals("permanent"))
+                return householdMember;
+        }
+        return null;
+    }
 
+    //xoa ho khau thuong tru
+    public void deletePermanentHouseholdMemberByID(int memberID) {
+        String sql = "delete from HouseholdMembers where UserId = ? and TypeStay='permanent'";
+        try {
+            List<HouseholdMember> list = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, memberID);
+            stmt.executeUpdate();            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    public void insertHouseholdMember(int householdId, int userId, String relationship, String typeStay) {
+        String sql = "insert into HouseholdMembers(HouseholdID, UserId, Relationship, TypeStay) values(?, ?, ?, ?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);            
+            stmt.setInt(1, householdId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, relationship);
+            stmt.setString(4, typeStay);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    
     public int findPermanentHouseHoldId(User user) {
         String sql = "select * from Households hh "
                 + "join HouseholdMembers hhm on hh.HouseholdID = hhm.HouseholdID "
@@ -92,5 +147,53 @@ public class HouseholdMemberDAO extends DBContext {
             System.out.println(ex.getMessage());
         }
         return -1;
+    }
+
+
+    public void deleteHouseholdMemberByUserId(int userId) {
+        String sql = """
+                     delete from HouseholdMembers where UserID = ?
+                     """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }
+
+    public void insertNewHouseholdMember(HouseholdMember householdMember){
+        String sql = """
+                     insert into HouseholdMembers(HouseholdID, UserID, Relationship, TypeStay) values(?, ?, ?, ?)
+                     """;
+         try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdMember.getHouseholdId());
+            stmt.setInt(2, householdMember.getUserId());
+            stmt.setString(3, householdMember.getRelationship());
+            stmt.setString(4, householdMember.getTypeStay());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+        public void insertNewHouseholdMemberForNoneHouseholdId(HouseholdMember householdMember){
+        String sql = """
+                     insert into HouseholdMembers(UserID, Relationship, TypeStay) values(?, ?, ?, ?)
+                     """;
+         try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, householdMember.getUserId());
+            stmt.setString(2, householdMember.getRelationship());
+            stmt.setString(3, householdMember.getTypeStay());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

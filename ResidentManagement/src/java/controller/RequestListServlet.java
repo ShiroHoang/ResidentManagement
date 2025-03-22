@@ -4,21 +4,29 @@
  */
 package controller;
 
-import dal.UserDAO;
+import dal.HouseholdDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import dal.RegistrationDAO;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import model.Registration;
 import model.User;
+import dal.RegistrationDAO;
+import dal.HouseholdMemberDAO;
+import model.HouseholdMember;
 
 /**
  *
- * @author huyng
+ * @author HP
  */
-public class LoginServlet extends HttpServlet {
+public class RequestListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +45,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet RequestListServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet RequestListServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,7 +66,43 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("view/login.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        RegistrationDAO rdb = new RegistrationDAO();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("account");
+        if(user == null){
+            response.sendRedirect("login");
+            return;
+        }
+        //for view detail of list
+        String action = request.getParameter("action");
+        if (action != null && action.equals("view")) {
+            Registration registration = rdb.getRegistrationById(Integer.parseInt(request.getParameter("RegistrationId")));
+            request.setAttribute("registration", registration);
+            RequestDispatcher rs = request.getRequestDispatcher("view/viewListDetail.jsp");
+            rs.forward(request, response);
+        }
+        
+
+        String requestType = request.getParameter("requestType");
+        //parameter to go back
+        HouseholdMemberDAO hmdb = new HouseholdMemberDAO();
+        String backTo = request.getParameter("backTo");
+        if (backTo != null && backTo.equals("approveRequest")) {
+            RequestDispatcher rs = request.getRequestDispatcher("view/approveRequest.jsp");
+            rs.forward(request, response);
+        } else if ((backTo != null && backTo.equals("listApprove")) || requestType != null) {
+            //calculate pagination
+            String residentName = request.getParameter("residentName");
+            String xpage = request.getParameter("page");
+            request.setAttribute("residentName", residentName);
+            request.setAttribute("page", xpage);
+            request.setAttribute("requestType", requestType);            
+            RequestDispatcher rs = request.getRequestDispatcher("page?action=requestList");
+            rs.forward(request, response);
+        }
+
+        
     }
 
     /**
@@ -72,22 +116,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        UserDAO udb = new UserDAO();
-        User user = udb.getAccount(email, password);
-        if(user == null){
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
-            request.getRequestDispatcher("view/login.jsp").forward(request, response);
-            return;
-        }
-        session.setAttribute("account",user);
-        user.getRole().equals("Police");
-        request.getRequestDispatcher("view/citizenMain.jsp").forward(request, response);
-        
-        session.setAttribute("account",user);
-        request.getRequestDispatcher("view/viewListDetail.jsp").forward(request, response);
+        //processRequest(request, response);       
+
+        response.setContentType("text/html;charset=UTF-8");
+        RegistrationDAO rdb = new RegistrationDAO();
+
     }
 
     /**

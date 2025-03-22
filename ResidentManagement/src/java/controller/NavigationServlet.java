@@ -5,6 +5,7 @@
 
 package controller;
 
+import dal.RegistrationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,8 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Registration;
 import model.User;
-
+import dal.UserDAO;
+import jakarta.servlet.RequestDispatcher;
+import java.util.ArrayList;
 /**
  *
  * @author huyng
@@ -58,8 +63,14 @@ public class NavigationServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
         User user = (User) session.getAttribute("account");
+        UserDAO udb = new UserDAO();
+        RegistrationDAO rdb = new RegistrationDAO();
+        if(action.equalsIgnoreCase("passwordReset")){
+            request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
+            return;
+        }
         if(user == null){
-            response.sendRedirect("login");
+            request.getRequestDispatcher("login").forward(request, response);
             return;
         }
         if(action.equalsIgnoreCase("citizenMain")){
@@ -69,8 +80,22 @@ public class NavigationServlet extends HttpServlet {
         }else if(action.equalsIgnoreCase("citizenAccount")){
             request.getRequestDispatcher("view/citizenAccount.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("viewRequest")){
-            request.getRequestDispatcher("view/viewRequest.jsp").forward(request, response);
-        }
+            request.getRequestDispatcher("registration?page=1").forward(request, response);
+        }  else if (action.equalsIgnoreCase("accountList")) {                       
+            request.getRequestDispatcher("page?page=1&action=accountList").forward(request, response);
+        } else if(action.equalsIgnoreCase("approveRequest")){
+            request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("viewNews")){
+            request.getRequestDispatcher("view/news.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news1")){
+            request.getRequestDispatcher("view/news1.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news2")){
+            request.getRequestDispatcher("view/news2.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news3")){
+            request.getRequestDispatcher("view/news3.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news4")){
+            request.getRequestDispatcher("view/news4.jsp").forward(request, response);
+        } 
     } 
 
     /** 

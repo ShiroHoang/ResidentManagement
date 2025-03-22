@@ -62,7 +62,7 @@
                 display: none;
             }
             .btn {
-                width: 20%;
+                width: 30%;
                 padding: 10px;
                 border: none;
                 background-color: #007bff;
@@ -292,8 +292,6 @@
         </div>
 
         <jsp:include page="footer.jsp"/>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
                                     function toggleFields() {
                                         let requestType = document.getElementById("requestType").value;

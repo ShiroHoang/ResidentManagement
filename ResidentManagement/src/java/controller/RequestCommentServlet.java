@@ -4,7 +4,11 @@
  */
 package controller;
 
-import dal.UserDAO;
+import dal.HouseholdDAO;
+import dal.HouseholdMemberDAO;
+import dal.LogDAO;
+import dal.RegistrationDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +16,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import model.Log;
+import model.Registration;
 import model.User;
 
 /**
  *
  * @author huyng
  */
-public class LoginServlet extends HttpServlet {
+public class RequestCommentServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +45,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet RequestCommentServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet RequestCommentServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,7 +66,30 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("view/login.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        RegistrationDAO rdb = new RegistrationDAO();
+        HouseholdDAO hdb = new HouseholdDAO();
+        HouseholdMemberDAO hmdb = new HouseholdMemberDAO();
+        User user = (User) session.getAttribute("account");
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = today.format(formatter);
+        LogDAO logdb = new LogDAO();
+        if (user == null) {
+            response.sendRedirect("login");
+        } else {
+            int registrationId = Integer.parseInt(request.getParameter("registrationId"));
+            Registration registration = rdb.getRegistrationById(registrationId);
+            String comment = request.getParameter("comment");
+            rdb.newCommentByRegistrationId(registrationId, comment);
+            Log log = new Log(user.getUserId(), "Nhận xét đơn " + registration.getRegistrationId(), formattedDate);
+            logdb.insertNewLog(log);
+            request.setAttribute("requestType", rdb.getRequestTypeByRegistrationId(registrationId));
+            request.setAttribute("message", "Nhận xét thành công");
+            request.setAttribute("registration", registration);
+            RequestDispatcher rs = request.getRequestDispatcher("view/viewListDetail.jsp");
+            rs.forward(request, response);
+        }
     }
 
     /**
@@ -72,22 +103,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        UserDAO udb = new UserDAO();
-        User user = udb.getAccount(email, password);
-        if(user == null){
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
-            request.getRequestDispatcher("view/login.jsp").forward(request, response);
-            return;
-        }
-        session.setAttribute("account",user);
-        user.getRole().equals("Police");
-        request.getRequestDispatcher("view/citizenMain.jsp").forward(request, response);
-        
-        session.setAttribute("account",user);
-        request.getRequestDispatcher("view/viewListDetail.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**

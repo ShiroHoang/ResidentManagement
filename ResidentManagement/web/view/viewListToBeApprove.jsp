@@ -3,16 +3,20 @@
     Created on : Feb 28, 2025, 5:03:04 PM
     Author     : huyng
 --%>
-<%@page import="dal.RegistrationDAO"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="model.Registration"%>
+<%@page import="dal.UserDAO"%>
+<%@page import="dal.RegistrationDAO"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>View Request</title>
+        <title>Submit Request</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="css/main.css"/>
@@ -40,6 +44,8 @@
                 transform: scale(1.1);
             }
             .form-container {
+                margin-top: 350px;
+                margin-bottom: 300px;
                 background: white;
                 padding: 20px;
                 border-radius: 8px;
@@ -50,6 +56,7 @@
             }
             table {
                 width: 100%;
+                margin-top: 15px;
             }
             td {
                 padding: 8px 0;
@@ -64,8 +71,9 @@
                 display: none;
             }
             .btn {
-                width: 20%;
+                width: 10%;
                 padding: 10px;
+                margin-bottom: 4px;
                 border: none;
                 background-color: #007bff;
                 color: white;
@@ -77,7 +85,6 @@
             @media (max-width: 768px) {
                 .hero h1 {
                     font-size: 2rem;
-                    height: 300px;
                 }
 
                 .navbar-brand{
@@ -99,15 +106,16 @@
                 .hero {
                     height: 80vh;
                     padding: 50px 20px;
+                    margin-bottom: 50px;
                 }
-                
-                .container {
-                    min-width: 100vw;
+
+                td {
+                    padding: 8px;
                 }
-                
-                .col-2 {
-                    width: auto;
-                }
+            }
+
+            table, th, td {
+                border: 1px solid;
             }
 
             .btn:hover {
@@ -117,55 +125,15 @@
             .formSubmit{
                 font-size: 1rem;
             }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
+            .baby {
+                color: #828d92;
+                font-size: 30px;
+                text-decoration: none;
+                font-weight: bold;
             }
-
-            th, td {
-                padding: 12px;
-                border: 1px solid #ddd;
-                text-align: left;
-                vertical-align: middle;
+            .baby:hover {
+                color: darkgray;
             }
-
-            th {
-                background-color: #007bff;
-                color: white;
-                font-size: 16px;
-            }
-
-            tr {
-                background-color: #f9f9f9;
-            }
-
-            tr:hover {
-                background-color: #e3f2fd;
-            }
-
-            input {
-                width: 100%;
-                border: none;
-                background: transparent;
-                text-align: center;
-            }
-
-            /* Optional: Make table responsive */
-            @media (max-width: 768px) {
-                table {
-                    font-size: 14px;
-                }
-                th, td {
-                    padding: 8px;
-                }
-                
-                .hidden-phone {
-                    display: none;
-                }
-                
-            }
-
             .pagination a {
                 margin-right: 10px; /* Adds space between page numbers */
                 padding: 5px 10px;   /* Adds padding inside the links */
@@ -173,180 +141,152 @@
                 border: 1px solid #ccc; /* Optional: Adds border */
                 border-radius: 5px; /* Optional: Rounded corners */
                 display: inline-block; /* Ensures spacing works */
-                background-color: white;
-                color: black;
             }
             .pagination a:hover {
                 background-color: #ddd; /* Optional: Hover effect */
             }
 
-            .pagination button:disabled {
-                background-color: #cccccc;
-                cursor: not-allowed;
-            }
-
-            #pageNumber{
-                background-color: white;
-                width: 30px;
-            }
-            .data-row{
-                text-align: left;
-            }
-            .table-header{
-                background: white;
-            }
-
-            .card-header{
-                color: white;
-            }
-            
-            td {
-                white-space: normal;
-                word-wrap: break-word; 
+            .formSubmit table {
+                border:none;
             }
 
         </style>
     </head>
     <body>
         <jsp:include page="header.jsp"/>
-        <c:set var="registrations" value="${requestScope.registrations}"/>
+        <c:set var="request" value="${requestScope.registrations}"/>
+        <c:set var="requestType" value="${requestScope.requestType}" />
         <div class="hero">
-            <div class="container">
-                <form class="formSubmit" action="registration" method="post">
-                    <c:set var="account" value="${sessionScope.account}"/>
-                    <input type="hidden" name="action" id="action" value="">
-                    <div class="card-header text-center fw-bold fs-3">
-                        Thông tin xử lý đơn từ 
-                    </div>
-                    <table class="" id="dataTable">
+            <div class="form-container">
+                <%
+                    UserDAO udb = new UserDAO();
+                    RegistrationDAO rdb = new RegistrationDAO();
+                    List<Registration> requestList = (List<Registration>) (request.getAttribute("requestList"));
+                    if (requestList == null) {
+                %>
+                <h2>Không còn đơn đề nghị!</h2>
+                <% } else {
+                    Registration registration1 = requestList.get(0);%>
+                <div>
+                    <h3>Danh sách đơn: </h3> 
+                    <form action="RequestList" class="formSubmit">
+                        <input type="hidden" name="requestType" value="${requestType}">
+                        <table class="search" style="border:0">
+                            <tr>
+                                <td style="border:none; width:30%" > Tra theo tên người gửi:</td>
+                                <td style="border:none"><input type="text" name="residentName"></td>
+
+                            </tr>
+                        </table>
+                        <input class="btn btn-default" type="submit" value="Tra cứu" />
+                    </form>
+                    <table>
                         <thead>
                             <tr>
-                                <th class="fs-6">Loại đơn</th>
-                                <th class="fs-6 hidden-phone">Loại hộ khẩu</th>
-                                <th class="fs-6 ">Ngày tạo</th>
-                                <th class="fs-6 hidden-phone">Chủ hộ khẩu</th>
-                                <th class="fs-6 hidden-phone">Mối quan hệ với chủ hộ khẩu</th>
-                                <th class="fs-6 hidden-phone">Ghi chú</th>
-                                <th class="fs-6">Trạng thái</th>
-                                <th class="fs-6 hidden-phone">Ngày trả lời</th>
+                                <td class="fs-5">Mã đơn</td>
+                                <td class="fs-5">Tên người gửi</td>
+                                <td class="fs-5">Thời gian gửi</td>
+                                <td class="fs-5">Chi tiết</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:set var="rdb" value="${requestScope.rdb}" />
-                            <c:forEach var="registration" items="${registrations}">
-                                <tr class="name">
-                                    <td class="data-row col-2">
-                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'registerAddress'}">
-                                            <input class="data-row" type="text" name="requestType" readonly value="Đăng ký hộ khẩu">
-                                        </c:if>
-                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'moveAddress'}">
-                                            <input class="data-row" type="text" name="requestType" readonly value="Chuyển hộ khẩu">
-                                        </c:if>
-                                        <c:if test="${rdb.getRequestTypeByRegistrationId(registration.registrationId) == 'separateAddress'}">
-                                            <input class="data-row" type="text" name="requestType" readonly value="Tách hộ khẩu">
-                                        </c:if>
-                                    </td>
-                                    <td class="hidden-phone">
-                                        <c:if test="${registration.registrationType == 'permanent'}">
-                                            <input class="data-row" type="text" name="registrationType" readonly value="Thường trú">
-                                        </c:if>
-                                        <c:if test="${registration.registrationType == 'temporary'}">
-                                            <input class="data-row" type="text" name="registrationType" readonly value="Tạm trú">
-                                        </c:if>
-                                        <c:if test="${registration.registrationType == 'temporaryStay'}">
-                                            <input class="data-row" type="text" name="registrationType" readonly value="Lưu trú">
-                                        </c:if>
-                                    </td>
-                                    <td>
-                                        <input class="data-row" type="text" name="startDate" readonly value="${registration.startDate}">
-                                    </td>
-                                    <td class="hidden-phone">
-                                        <c:if test="${!registration.headOfHouseholdName.isEmpty()}">
-                                            <input class="data-row" type="text" name="headOfHousehold" readonly value="${registration.headOfHouseholdName}">
-                                        </c:if>
-                                        <c:if test="${registration.headOfHouseholdName.isEmpty()}">
-                                            <input class="data-row" type="text" name="headOfHousehold" readonly value="Không có">
-                                        </c:if>
-                                    </td>
-                                    <td class="hidden-phone">
-                                        <c:if test="${registration.relationship != null}">
-                                            <input class="data-row" type="text" name="relationship" readonly value="${registration.relationship}">
-                                        </c:if>
-                                        <c:if test="${registration.relationship == null}">
-                                            <input class="data-row" type="text" name="relationship" readonly value="Không có">
-                                        </c:if>
-                                    </td>
-                                    <td class="hidden-phone">
-                                        <input class="data-row" type="text" name="comment" readonly value="${registration.comments}">
-                                    </td>
-                                    <td>
-                                        <input class="data-row" type="text" name="status" readonly value="${registration.status}">
-                                    </td>
-                                    <td class="hidden-phone">
-                                        <input class="data-row" type="text" name="endDate" readonly value="${registration.endDate}">
-                                    </td>
-                                </tr>
+
+                            <% for (Registration registration : requestList) {%>
+                            <tr>
+                                <td class="fs-6"><%= registration.getRegistrationId()%></td>
+                                <td class="fs-6"><%= udb.getFullNameByUserId(registration.getUserId())%></td>
+                                <td class="fs-6"><%= registration.getStartDate()%></td>
+                                <td class="fs-6">
+                                    <input type="button" value="Xem"
+                                           onclick="location.href = 'RequestList?action=view&RegistrationId=<%= registration.getRegistrationId()%>'">
+                                </td>
+                            </tr>
+                            <% }%>
+                            <c:set var="page" value="${requestScope.page}"/>
+                        <div class="pagination fs-6" >
+                            <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
+                                <a class="baby fs-6" href="RequestList?page=${i}&requestType=<%= rdb.getRequestTypeByRegistrationId(registration1.getRegistrationId())%>">${i}</a>
                             </c:forEach>
+                        </div>
+                        <!--                        <div class="text-center fs-4" width="100px">
+                        ${requestScope.message}
+                    </div> -->
                         </tbody>
+
                     </table>
-                </form>
-                            <br/>
-                <c:set var="page" value="${requestScope.page}"/>
-                <div class="pagination">
-                    <c:forEach begin="${1}" end="${requestScope.pagenum}" var="i">
-                        <a href="registration?page=${i}">${i}</a>
-                    </c:forEach>
+                    <a class="baby" href="RequestList?backTo=approveRequest">Quay lại</a>
                 </div>
+                <% }%>
+
             </div>
+
         </div>
 
         <jsp:include page="footer.jsp"/>
 
+
         <script>
-            const rowsPerPage = 5;
-            let currentPage = 1;
-            const table = document.getElementById("dataTable");
-            const tbody = table.getElementsByTagName("tbody")[0];
-            const rows = Array.from(tbody.getElementsByTagName("tr"));
-            const totalPages = Math.ceil(rows.length / rowsPerPage);
-            const pageNumberSpan = document.getElementById("pageNumber");
 
-            function showPage(page) {
-                // Hide all rows
-                rows.forEach(row => (row.style.display = "none"));
+            function toggleFields() {
+                let requestType = document.getElementById("requestType").value;
+                let typeStay = document.querySelector(".typeStay");
+                let new_address = document.querySelector(".newAddress");
+                let old_address = document.querySelector(".oldAddress");
+                let moved_address = document.querySelector(".movedAddress");
+                let permanentAddress = document.querySelector(".permanentAddress");
+                let permanentSeparateAddress = document.querySelector(".permanentSeparateAddress");
 
-                // Calculate start and end index
-                const start = (page - 1) * rowsPerPage;
-                const end = start + rowsPerPage;
-
-                // Show only the rows for the current page
-                rows.slice(start, end).forEach(row => (row.style.display = "table-row"));
-
-                // Update buttons
-                document.getElementById("prevPage").disabled = page === 1;
-                document.getElementById("nextPage").disabled = page === totalPages;
-
-                // Update page number
-                pageNumberSpan.textContent = page;
+                // Hide all initiall
+                typeStay.classList.add("hidden");
+                new_address.classList.add("hidden");
+                old_address.classList.add("hidden");
+                moved_address.classList.add("hidden");
+                permanentAddress.classList.add("hidden");
+                permanentSeparateAddress.classList.add("hidden");
+                if (requestType === "registerAddress") {
+                    typeStay.classList.remove("hidden");
+                    new_address.classList.remove("hidden");
+                } else if (requestType === "moveAddress") {
+                    typeStay.classList.add("hidden");
+                    new_address.classList.add("hidden");
+                    old_address.classList.remove("hidden");
+                    moved_address.classList.remove("hidden");
+                    permanentAddress.classList.remove("hidden");
+                } else {
+                    typeStay.classList.add("hidden");
+                    new_address.classList.add("hidden");
+                    old_address.classList.add("hidden");
+                    moved_address.classList.add("hidden");
+                    permanentAddress.classList.add("hidden");
+                    permanentSeparateAddress.classList.remove("hidden");
+                }
             }
 
-            // Event listeners for pagination buttons
-            document.getElementById("prevPage").addEventListener("click", function () {
-                if (currentPage > 1) {
-                    currentPage--;
-                    showPage(currentPage);
-                }
+            document.addEventListener("DOMContentLoaded", function () {
+                toggleFields(); // Ensure the function runs when the page loads
+                document.getElementById("requestType").addEventListener("change", toggleFields);
             });
 
-            document.getElementById("nextPage").addEventListener("click", function () {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    showPage(currentPage);
-                }
-            });
+            function syncSelectToHidden(selectId, hiddenId) {
+                const selectElement = document.getElementById(selectId);
+                const hiddenInput = document.getElementById(hiddenId); // Corrected variable name
 
-            // Initialize table
-            showPage(currentPage);
+                function updateHidden() {
+                    hiddenInput.value = selectElement.value; // Properly updates hidden input
+                }
+
+                // Set initial value when the page loads
+                updateHidden();
+
+                // Add event listener to update on change
+                selectElement.addEventListener('change', updateHidden);
+            }
+
+            // Call function correctly after the DOM is loaded
+            document.addEventListener("DOMContentLoaded", function () {
+                syncSelectToHidden('requestType', 'action'); // This should now work
+            })
+
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {

@@ -12,41 +12,46 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import model.User;
 
 /**
  *
  * @author AN515-57
  */
-public class RegisterAccountServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+public class PoliceUpdateAccountServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs hh
+     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterAccountServlet</title>");  
+            out.println("<title>Servlet policeUpdateAccountServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterAccountServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet policeUpdateAccountServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -54,12 +59,33 @@ public class RegisterAccountServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
-    } 
+            throws ServletException, IOException {
+//        processRequest(request, response);
+        HttpSession session = request.getSession();
+        UserDAO udb = new UserDAO();
+        User user = (User) session.getAttribute("account");
 
-    /** 
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+
+        String action = request.getParameter("action");
+        if (action == null) {
+            //do nothing
+        } else if (action.equals("update")) {
+            int userid = Integer.parseInt(request.getParameter("userid"));
+            User chosenUser = udb.getUserById(userid);
+            request.setAttribute("user", chosenUser);
+            request.getRequestDispatcher("view/updateAccount.jsp").forward(request, response);
+            return;
+        }
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -67,37 +93,24 @@ public class RegisterAccountServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String fullName = request.getParameter("name");
-        String email = request.getParameter("email");
-        String phoneNum = request.getParameter("phone");        
-        String address = request.getParameter("address");
-        String role = request.getParameter("role");
-        String newPass = request.getParameter("newPass").trim();
-        String confirmPass = request.getParameter("confirmPass").trim();
-        
+            throws ServletException, IOException {
+//        processRequest(request, response);
         UserDAO userdb = new UserDAO();
-        User user = userdb.getUserByNamePhoneAndEmail(fullName, email, phoneNum);
-        
-        if ( userdb.checkIfExistedEmail(email) || user != null) {
-            request.setAttribute("error", "Thông tin tài khoản đã tồn tại hoặc email đã được đăng kí!");
-            request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
-            return;
-        }
-        
-        if (!newPass.equals(confirmPass)) {
-            request.setAttribute("error", "Mật khẩu không khớp!");
-            request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
-            return;
-        }        
-        
-        userdb.insertAccount(fullName, email, newPass, role, phoneNum, address);
-        request.setAttribute("success", "Đăng kí tài khoản thành công!");
-        request.getRequestDispatcher("view/registerAccount.jsp").forward(request, response);
+        String userId = request.getParameter("userId");
+        String fullName = request.getParameter("fullName");
+        String address = request.getParameter("addresss");
+        String phoneNum = request.getParameter("phoneNum");
+        String roleId = request.getParameter("roleId");
+
+        userdb.updateAccountByPolice(Integer.parseInt(userId), fullName, roleId, phoneNum);
+
+        request.setAttribute("message", "Đổi thành công!");
+        request.getRequestDispatcher("view/updateAccount.jsp").forward(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

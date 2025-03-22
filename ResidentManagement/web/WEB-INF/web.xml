@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
@@ -20,15 +28,37 @@
         <servlet-name>NavigationServlet</servlet-name>
         <servlet-class>controller.NavigationServlet</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>RegisterAccountServlet</servlet-name>
         <servlet-class>controller.RegisterAccountServlet</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>RegistrationProcessServlet</servlet-name>
         <servlet-class>controller.RegistrationProcessServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PoliceUpdateAccountServlet</servlet-name>
+        <servlet-class>controller.PoliceUpdateAccountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestListServlet</servlet-name>
+        <servlet-class>controller.RequestListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestProcessServlet</servlet-name>
+        <servlet-class>controller.RequestProcessServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PaginationServlet</servlet-name>
+        <servlet-class>controller.PaginationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResetPassServlet</servlet-name>
+        <servlet-class>controller.ResetPassServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestCommentServlet</servlet-name>
+        <servlet-class>controller.RequestCommentServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -50,15 +80,37 @@
         <servlet-name>NavigationServlet</servlet-name>
         <url-pattern>/nav</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>RegisterAccountServlet</servlet-name>
         <url-pattern>/RegisterAccount</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>RegistrationProcessServlet</servlet-name>
         <url-pattern>/registration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PoliceUpdateAccountServlet</servlet-name>
+        <url-pattern>/PoliceUpdateAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestListServlet</servlet-name>
+        <url-pattern>/RequestList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestProcessServlet</servlet-name>
+        <url-pattern>/RequestProcess</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaginationServlet</servlet-name>
+        <url-pattern>/page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPassServlet</servlet-name>
+        <url-pattern>/ResetPass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestCommentServlet</servlet-name>
+        <url-pattern>/RequestComment</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>

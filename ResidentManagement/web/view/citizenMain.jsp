@@ -62,7 +62,7 @@
                 }
 
                 .hero {
-                    height: auto; /* Adjust height */
+                    min-height: 100%;
                     padding: 50px 20px;
                 }
             }
@@ -81,7 +81,7 @@
         
         <jsp:include page="footer.jsp"/>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
     </body>
     <script>
         const text = "CHÀO MỪNG TỚI CỔNG THÔNG TIN ĐIỆN TỬ QUẢN LÝ DÂN CƯ";
