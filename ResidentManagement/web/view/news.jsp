@@ -35,6 +35,49 @@
                 justify-content: center;
                 text-align: center;
             }
+            .hero{
+                height: 100vh;
+                background: linear-gradient(rgba(144, 7, 13), rgba(0, 0, 0, 0.5)), url('https://free.vector6.com/wp-content/uploads/2021/03/E269-vector-trong-dong.jpg');
+                background-size: cover;
+                color: yellow;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .buttons{
+                width: 40%;
+            }
+            .btn:hover {
+                background-color: #CE7A58;
+                color: #fff;
+            }
+            .btn{
+                margin: 0px 3px;
+                border-color: #CE7A58;
+                color: #1E2F41;
+                border-radius: 3px;
+                width: 130px;
+                min-width: 0px;
+                font-size: 18px;
+                height: auto;
+                font-weight: 500;
+            }
+            .btn-fourth:hover {
+                background: #ffb01e;
+            }
+            .btn-fourth {
+                background: #FFC251;
+                color: #000;
+                font-weight: 500;
+                width: 100%;
+                min-height: 100px;
+            }
+            
+            .actions{
+                margin:-200px;
+                max-width: 800px;
+            }
             .navbar-nav .nav-link:hover {
                 color: #ffcc00 !important;
                 transform: scale(1.1);
@@ -141,9 +184,31 @@
 
         </style>
     </head>
+
     <body>
-        <jsp:include page="header.jsp"/>
-    <body>
+        <c:if test="${sessionScope.account ne null}">
+            <jsp:include page="header.jsp"/>
+        </c:if>
+        <c:if test="${sessionScope.account eq null}">
+            <nav class="navbar navbar-expand-lg custom-navbar"> 
+                <!--            used for responsive when using smaller screen-->
+                <div class="container">
+                    <a class="navbar-brand col-lg-5" href="home.html">
+                        <img src="images/logo/logo.png" width="100%"  alt="logo"/>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse px-5" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a href="login" class="btn btn-login">Đăng nhập</a></li>
+                            <li class="nav-item"><a href="RegisterAccount" class="btn btn-login">Đăng ký</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            
+        </c:if>
         <div class="hero">
             <div class="container  mt-4">
                 <h2 class="section-title">Tin Mới</h2>
@@ -152,7 +217,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="news-card">
-                            <a href="nav?action=news1">
+                            <a href="news?action=news1">
                                 <h3>Tạm dừng các hệ thống thuế điện tử đến 8 giờ sáng ngày 17/3</h3>
                             </a>
                         </div>
@@ -160,7 +225,7 @@
 
                     <div class="col-md-4">
                         <div class="news-card">
-                            <a href="nav?action=news2">
+                            <a href="news?action=news2">
                                 <h3>Hướng dẫn khắc phục lỗi khi đăng ký tài khoản trên Cổng Dịch vụ công quốc gia</h3>
                             </a>
                         </div>
@@ -168,7 +233,7 @@
 
                     <div class="col-md-4">
                         <div class="news-card">
-                            <a href="nav?action=news3">
+                            <a href="news?action=news3">
                                 <h3>Cung cấp dịch vụ công "Giải quyết hưởng trợ cấp thất nghiệp" trên Cổng Dịch vụ công quốc gia</h3>
                             </a>
                         </div>
@@ -179,7 +244,7 @@
                 <div class="row mt-4">
                     <div class="col-md-6">
                         <div class="news-image">
-                            <a href="nav?action=news4">
+                            <a href="news?action=news4">
                                 <img src="images/news/danny.jpeg" alt="tin moi">
                             </a>
                         </div>
@@ -187,7 +252,7 @@
 
                     <div class="col-md-6">
                         <div class="news-card">
-                            <a href="nav?action=news4">
+                            <a href="news?action=news4">
                                 <h3>Thủ tục, cách thức đổi, cấp giấy phép lái xe từ ngày 1/3</h3>
                                 <p>Đại diện Cục Cảnh sát giao thông (Bộ Công an) cho biết, từ ngày 1/3, người dân khi có nhu cầu đổi, cấp lại giấy phép lái xe sẽ được thực hiện theo 2 cách gồm trực tiếp và trực tuyến.</p>
                             </a>
@@ -197,7 +262,7 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <jsp:include page="footer.jsp"/>
-</body>
+        
+        <jsp:include page="footer.jsp"/>
+    </body>
 </html>

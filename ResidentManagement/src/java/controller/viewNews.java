@@ -5,7 +5,6 @@
 
 package controller;
 
-import dal.RegistrationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,17 +12,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Registration;
 import model.User;
-import dal.UserDAO;
-import jakarta.servlet.RequestDispatcher;
-import java.util.ArrayList;
+
 /**
  *
- * @author huyng
+ * @author HP
  */
-public class NavigationServlet extends HttpServlet {
+public class viewNews extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -40,10 +35,10 @@ public class NavigationServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NavigationServlet</title>");  
+            out.println("<title>Servlet viewNews</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NavigationServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet viewNews at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,31 +55,18 @@ public class NavigationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        //processRequest(request, response);
         String action = request.getParameter("action");
-        User user = (User) session.getAttribute("account");
-        UserDAO udb = new UserDAO();
-        RegistrationDAO rdb = new RegistrationDAO();
-        if(action.equalsIgnoreCase("passwordReset")){
-            request.getRequestDispatcher("view/passwordReset.jsp").forward(request, response);
-            return;
-        }
-        if(user == null){
-            request.getRequestDispatcher("login").forward(request, response);
-            return;
-        }
-        if(action.equalsIgnoreCase("citizenMain")){
-            request.getRequestDispatcher("view/citizenMain.jsp").forward(request, response);
-        }else if(action.equalsIgnoreCase("submitRequest")){
-            request.getRequestDispatcher("view/submitRequest.jsp").forward(request, response);
-        }else if(action.equalsIgnoreCase("citizenAccount")){
-            request.getRequestDispatcher("view/citizenAccount.jsp").forward(request, response);
-        }else if(action.equalsIgnoreCase("viewRequest")){
-            request.getRequestDispatcher("registration?page=1").forward(request, response);
-        }  else if (action.equalsIgnoreCase("accountList")) {                       
-            request.getRequestDispatcher("page?page=1&action=accountList").forward(request, response);
-        } else if(action.equalsIgnoreCase("approveRequest")){
-            request.getRequestDispatcher("view/approveRequest.jsp").forward(request, response);
+        if(action.equalsIgnoreCase("viewNews")){
+            request.getRequestDispatcher("view/news.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news1")){
+            request.getRequestDispatcher("view/news1.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news2")){
+            request.getRequestDispatcher("view/news2.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news3")){
+            request.getRequestDispatcher("view/news3.jsp").forward(request, response);
+        } else if(action.equalsIgnoreCase("news4")){
+            request.getRequestDispatcher("view/news4.jsp").forward(request, response);
         } 
     } 
 

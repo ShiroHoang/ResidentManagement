@@ -29,7 +29,7 @@
                             </li>
                         </c:if>
                         <li class="nav-item align-items-center">
-                            <a class="nav-link fs-5" href="nav?action=viewNews">Tin mới</a>
+                            <a class="nav-link fs-5" href="news?action=viewNews">Tin mới</a>
                         </li>
                         <li class="nav-item dropdown align-items-center">
                             <a class="nav-link dropdown-toggle fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
