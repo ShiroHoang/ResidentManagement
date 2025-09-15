@@ -76,6 +76,7 @@
                 </button>
                 <div class="collapse navbar-collapse px-5" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a href="news?action=viewNews" class="btn btn-login">Tin mới</a></li>
                         <li class="nav-item"><a href="login" class="btn btn-login">Đăng nhập</a></li>
                         <li class="nav-item"><a href="RegisterAccount" class="btn btn-login">Đăng ký</a></li>
                     </ul>

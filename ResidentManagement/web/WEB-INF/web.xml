@@ -60,6 +60,10 @@
         <servlet-name>RequestCommentServlet</servlet-name>
         <servlet-class>controller.RequestCommentServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewNews</servlet-name>
+        <servlet-class>controller.viewNews</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>RequestCommentServlet</servlet-name>
         <url-pattern>/RequestComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewNews</servlet-name>
+        <url-pattern>/news</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>

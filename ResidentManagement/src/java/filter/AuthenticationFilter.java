@@ -114,6 +114,7 @@ public class AuthenticationFilter implements Filter {
         String loginURI = req.getContextPath() + "/login";
         String homeURI = req.getContextPath() + "/home.html";
         String registerURI = req.getContextPath() + "/RegisterAccount";
+        String newsPath = req.getContextPath() + "/news";
         String passwordResetPath = req.getContextPath() + "/nav";
 
         String requestURI = req.getRequestURI();
@@ -121,13 +122,20 @@ public class AuthenticationFilter implements Filter {
                 || requestURI.endsWith(".png")
                 || requestURI.endsWith(".gif")
                 || requestURI.endsWith(".css")
-                || requestURI.endsWith(".js");
+                || requestURI.endsWith(".js")
+                || requestURI.endsWith(".jpeg");
         boolean loginRequest = req.getRequestURI().equalsIgnoreCase(loginURI);
         boolean homeRequest = req.getRequestURI().equalsIgnoreCase(homeURI);
+        boolean newsRequest = req.getRequestURI().equalsIgnoreCase(newsPath) 
+                && ("viewNews".equals(req.getParameter("action"))
+                || "news1".equals(req.getParameter("action"))
+                || "news2".equals(req.getParameter("action"))
+                || "news3".equals(req.getParameter("action"))
+                || "news4".equals(req.getParameter("action")));
         boolean registerRequest = req.getRequestURI().equalsIgnoreCase(registerURI);
         boolean passwordReset = req.getRequestURI().equalsIgnoreCase(passwordResetPath)
                 && "passwordReset".equals(req.getParameter("action"));
-        if (loggedIn || loginRequest || homeRequest || registerRequest || passwordReset || isStaticResource ) {
+        if (loggedIn || loginRequest || homeRequest || registerRequest || passwordReset || isStaticResource || newsRequest) {
             // If the user is logged in or the request is for the login page or public resources,
             // then continue processing the request.
             chain.doFilter(request, response);
